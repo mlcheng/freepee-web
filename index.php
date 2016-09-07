@@ -18,7 +18,7 @@ require_once("../functions.php");
 		<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
 
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300" type="text/css">
-		<link rel="stylesheet" href="<?= Config::$serverRoot ?>mobile/assets/styles/map.min.css?<?= md5_file($_SERVER['DOCUMENT_ROOT'] . Config::$serverRoot . "mobile/assets/styles/map.min.css"); ?>">
+		<link rel="stylesheet" href="<?= Utils::getAppendedFileHash("mobile/assets/styles/map.min.css") ?>">
 
 		<!-- my libraries -->
 		<script>
@@ -37,25 +37,25 @@ require_once("../functions.php");
 
 		<script>
 		'use strict';
-		/* exported __api_getLocation__, __api_loadAuth__ */
+		/* exported __api_getLocation, __api_loadAuth */
 		/* global iqwerty */
 
-		// API callback functions
-		function __api_getLocation__() {
+		// Google API callback functions
+		function __api_getLocation() {
 			iqwerty.freepee.Map.getLocation();
 		}
-		function __api_loadAuth__() {
+		function __api_loadAuth() {
 			iqwerty.freepee.Google.loadAuth();
 		}
 		</script>
 
 
 		<!-- Get Google Maps API -->
-		<script src="https://maps.googleapis.com/maps/api/js?v=3&key=<?= Constants::GOOGLE_MAPS_KEY ?>&libraries=places&callback=__api_getLocation__"></script>
+		<script src="https://maps.googleapis.com/maps/api/js?v=3&key=<?= Constants::GOOGLE_MAPS_KEY ?>&libraries=places&callback=__api_getLocation"></script>
 
 		<!-- Get Google+ login API -->
 		<!-- Note, the callback doesn't work with '.', since it's called as window[callback] -->
-		<script async defer src="https://apis.google.com/js/platform.js?onload=__api_loadAuth__"></script>
+		<script async defer src="https://apis.google.com/js/platform.js?onload=__api_loadAuth"></script>
 
 
 		<title>Free Pee &sect; v2</title>
@@ -66,14 +66,14 @@ require_once("../functions.php");
 			id="panel"
 			class="hidden"
 			data-iq-template-src="<?= Config::$serverRoot ?>mobile/assets/templates/panel.html"
-			data-iq-template-loaded="bindBathroomData">
+			data-iq-template-loaded="__template.bindBathroomData">
 		</div>
 
 
 		<div
 			id="toolbar"
 			data-iq-template-src="<?= Config::$serverRoot ?>mobile/assets/templates/toolbar.html"
-			data-iq-template-loaded="bindToolbarData">
+			data-iq-template-loaded="__template.bindToolbarData">
 		</div>
 
 		<div id="search" class="hidden">

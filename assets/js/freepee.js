@@ -12,7 +12,8 @@
 'use strict';
 
 /* globals require, __dirname, google, serverRoot, $http, MarkerClusterer, gapi */
-/* exported bindBathroomData, bindToolbarData */
+
+/* exported __template */
 
 const fs = require('fs');
 
@@ -525,31 +526,33 @@ iqwerty.freepee.Google = (function() {
 
 
 /**
- * Binds data to the panel template once.
- * Sucks to be global...but whatever.
+ * Callbacks for when templates are loaded
+ * @type {Object}
  */
-function bindBathroomData() {
-	//Add the selected bathroom to the binding model
-	iqwerty.binding.Model({
-		bathroom: iqwerty.freepee.Map.selectedBathroom,
-		search: iqwerty.freepee.Map.search
-	});
+const __template = {
+	bindBathroomData() {
+		//Add the selected bathroom to the binding model
+		iqwerty.binding.Model({
+			bathroom: iqwerty.freepee.Map.selectedBathroom,
+			search: iqwerty.freepee.Map.search
+		});
 
-	/**
-	 * Add state controllers
-	 * Must be done after template is loaded...
-	 */
-	iqwerty.history.States({
-		'': iqwerty.freepee.Map.BaseStateController,
-		'bathroom/:id': iqwerty.freepee.Map.BathroomStateController
-	}, {
-		'base': `${serverRoot}m/`
-	});
-}
+		/**
+		 * Add state controllers
+		 * Must be done after template is loaded...
+		 */
+		iqwerty.history.States({
+			'': iqwerty.freepee.Map.BaseStateController,
+			'bathroom/:id': iqwerty.freepee.Map.BathroomStateController
+		}, {
+			'base': `${serverRoot}m/`
+		});
+	},
 
-function bindToolbarData() {
-	iqwerty.binding.Model({
-		guser: iqwerty.freepee.Google.guser,
-		view: __view__
-	});
-}
+	bindToolbarData() {
+		iqwerty.binding.Model({
+			guser: iqwerty.freepee.Google.guser,
+			view: __view__
+		});
+	}
+};
