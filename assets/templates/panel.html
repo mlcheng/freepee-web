@@ -1,0 +1,43 @@
+<div class="loading"></div>
+
+<div class="wrapper">
+	<a onclick="iqwerty.history.Push(''); iqwerty.freepee.Map.closePanel();" class="right link close-button">&#x274c;</a>
+
+	<div id="map-view-small" class="clear"></div>
+
+	<div id="panel-view">
+		<div data-iq-bind-to="data-display:view.panel.display.detail">
+			<div class="detail" data-iq-bind>
+				<div class="card">
+					<div class="card--title">Address</div>
+					<div class="card--description">{bathroom.approx_address}</div>
+				</div>
+				<div class="card">
+					<div class="card--title">Rating</div>
+					<div class="card--description">
+						<span
+							class="vote vote--upvote"
+							onclick="iqwerty.freepee.Bathroom.upvote()">
+							{bathroom.upvotes}
+						</span>
+						<span
+							class="vote vote--downvote"
+							onclick="iqwerty.freepee.Bathroom.downvote()">
+							{bathroom.downvotes}
+						</span>
+					</div>
+				</div>
+				<div class="card">
+					<div class="card--title">Description</div>
+					<div class="card--description">{bathroom.description}</div>
+				</div>
+			</div>
+		</div>
+
+		<div data-iq-bind-to="data-display:view.panel.display.add">
+			<div class="detail">
+				Adding a bathroom!
+			</div>
+		</div>
+	</div>
+</div>
