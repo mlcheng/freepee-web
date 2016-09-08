@@ -8,7 +8,7 @@
             --All Rights Reserved--
 
 ***********************************************/
-@import url("../../../assets/styles/normalize.css");
+@import url('../../../assets/styles/normalize.css');
 
 /*#00838f, rgb(0, 131, 143)*/
 /*#ffeb3b*/
@@ -172,6 +172,17 @@ html, body {
 	box-shadow: 0 0 8px rgba(0, 0, 0, .3);
 }
 
+#map-view-small[data-marker="true"]::after {
+	background: url('../images/temp2.png') no-repeat center center;
+	content: '';
+	position: absolute;
+	width: 100px;
+	height: 100px;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, calc(-50% - (35px / 2))); /* This makes the bottom tip of the marker the exact center */
+}
+
 #panel .detail {
 	margin: 30px 0;
 }
@@ -184,7 +195,7 @@ html, body {
 }
 
 #panel .card .card--description {
-	margin: 5px 15px;
+	margin: 10px 15px;
 }
 
 #panel .vote {
@@ -215,6 +226,16 @@ html, body {
 
 #panel .vote:hover {
 	opacity: 1;
+}
+
+#panel textarea.description {
+	resize: none;
+	border: none;
+	border-bottom: 2px solid;
+}
+
+#panel textarea.description:focus {
+	outline: none;
 }
 
 #search {
@@ -277,7 +298,7 @@ html, body {
 	height: 100%;
 }
 
-.loading:before {
+.loading::before {
 	width: 100px;
 	height: 100px;
 	border-radius: 100px;
@@ -357,6 +378,10 @@ html, body {
 
 .fab.fab--add-bathroom {
 	background-image: url('../images/add.svg');
+}
+
+textarea.full-width {
+	width: 100%;
 }
 
 .flex {

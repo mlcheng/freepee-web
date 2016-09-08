@@ -35,6 +35,10 @@ var __view__ = {
 		display: {
 			detail: 'false',
 			add: 'false'
+		},
+		add: {
+			approx_address: null,
+			description: null
 		}
 	}
 };
@@ -341,6 +345,14 @@ iqwerty.freepee.Bathroom = (function() {
 
 		__view__.panel.display.detail = '';
 		__view__.panel.display.add = 'true';
+
+
+		// Let the map be draggable to allow precise adding of bathrooms
+		let options = Object.assign({}, DEFAULT_SMALL_MAP_OPTIONS);
+		options.draggable = true;
+
+		const { lat, lng } = iqwerty.freepee.Map.location;
+		initMap({ lat, lng }, options);
 	};
 
 	exports.upvote = function() {

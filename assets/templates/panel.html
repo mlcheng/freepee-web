@@ -3,7 +3,11 @@
 <div class="wrapper">
 	<a onclick="iqwerty.history.Push(''); iqwerty.freepee.Map.closePanel();" class="right link close-button">&#x274c;</a>
 
-	<div id="map-view-small" class="clear"></div>
+	<div
+		id="map-view-small"
+		class="clear"
+		data-iq-bind-to="data-marker:view.panel.display.add">
+	</div>
 
 	<div id="panel-view">
 		<div data-iq-bind-to="data-display:view.panel.display.detail">
@@ -33,10 +37,18 @@
 				</div>
 			</div>
 		</div>
-
 		<div data-iq-bind-to="data-display:view.panel.display.add">
-			<div class="detail">
-				Adding a bathroom!
+			<div class="detail" data-iq-bind>
+				<div class="card">
+					<div class="card--title">Address</div>
+					<div class="card--description">{view.panel.add.approx_address}</div>
+				</div>
+				<div class="card">
+					<div class="card--title">Description</div>
+					<div class="card--description">
+						<textarea class="description full-width"></textarea>{view.panel.add.description}
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
