@@ -31,18 +31,23 @@ require_once("../functions.php");
 		<script src="<?= Constants::IQ_LIB_PATH ?>quantum/quantum.js"></script>
 
 		<!-- Dev scripts -->
-		<script src="<?= Config::$serverRoot ?>assets/js/constants.min.js"></script>
+		<!-- <script src="<?= Config::$serverRoot ?>assets/js/constants.min.js"></script> -->
 		<script src="<?= Config::$serverRoot ?>mobile/assets/js/MarkerClusterer.min.js"></script>
-		<script src="<?= Config::$serverRoot ?>mobile/assets/js/freepee.min.js"></script>
+		<script src="<?= Config::$serverRoot ?>mobile/assets/js/freepee.mod.js"></script>
 
 		<script>
 		'use strict';
+
+		/* global require */
 		/* exported __api_getLocation, __api_loadAuth */
-		/* global iqwerty */
+
+		var iqwerty = iqwerty || {};
+		iqwerty.freepee = require('iqwerty-freepee');
+
 
 		// Google API callback functions
 		function __api_getLocation() {
-			iqwerty.freepee.Map.getLocation();
+			iqwerty.freepee.MainMap.getLocation();
 		}
 		function __api_loadAuth() {
 			iqwerty.freepee.Google.loadAuth();
@@ -66,14 +71,14 @@ require_once("../functions.php");
 			id="panel"
 			class="hidden"
 			data-iq-template-src="<?= Config::$serverRoot ?>mobile/assets/templates/panel.html"
-			data-iq-template-loaded="__template.bindBathroomData">
+			data-iq-template-loaded="iqwerty.freepee.ViewModel.template.bindBathroomData">
 		</div>
 
 
 		<div
 			id="toolbar"
 			data-iq-template-src="<?= Config::$serverRoot ?>mobile/assets/templates/toolbar.html"
-			data-iq-template-loaded="__template.bindToolbarData">
+			data-iq-template-loaded="iqwerty.freepee.ViewModel.template.bindToolbarData">
 		</div>
 
 		<div id="search" class="hidden">
@@ -85,7 +90,7 @@ require_once("../functions.php");
 
 		<button
 			class="fab fab--search"
-			onclick="iqwerty.freepee.Map.toggleSearch();">
+			onclick="iqwerty.freepee.MainMap.toggleSearch();">
 		</button>
 		<button
 			class="fab fab--add-bathroom"
