@@ -1,3 +1,4 @@
+
 /***********************************************
 
   "map.css"
@@ -345,7 +346,7 @@ html, body {
 
 .button.button--info-window {
 	font-size: 140%;
-	min-width: 60px;
+	min-width: 100px;
 }
 
 .fab {
