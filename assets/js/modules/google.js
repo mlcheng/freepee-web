@@ -24,14 +24,6 @@ let _auth;
 
 let _guser;
 
-shell.guser = {
-	token: '',
-	name: '',
-	id: '',
-	gpURL: '',
-	pic: Constants.ToiletImage.BATHROOM_MARKER
-};
-
 shell.loadAuth = function() {
 	gapi.load('auth2', function() {
 		_auth = gapi.auth2.init({
@@ -69,7 +61,7 @@ shell.loginFailure = function() {
 
 shell.logout = function() {
 	_auth.disconnect();
-	ViewModel.guser.signedIn = false;
+	ViewModel.model.view.guser.signedIn = false;
 };
 
 function _signInChanged(signedIn) {
@@ -92,17 +84,19 @@ function _userChanged(guser) {
 	var profile = guser.getBasicProfile();
 	if(!profile) return;
 
-	shell.guser.token = _guser.getAuthResponse().id_token;
-	shell.guser.name = profile.getGivenName();
-	shell.guser.id = profile.getId();
-	shell.guser.gpURL = `https://plus.google.com/${shell.guser.id}`;
-	shell.guser.pic = profile.getImageUrl();
+	let userModel = ViewModel.model.user.guser;
 
-	if(shell.guser.token) {
-		ViewModel.guser.signedIn = true;
+	userModel.token = _guser.getAuthResponse().id_token;
+	userModel.name = profile.getGivenName();
+	userModel.id = profile.getId();
+	userModel.gpURL = `https://plus.google.com/${userModel.id}`;
+	userModel.pic = profile.getImageUrl();
+
+	if(userModel.token) {
+		ViewModel.model.view.guser.signedIn = true;
 	}
 
-	console.log(_guser, shell.guser);
+	console.log(_guser, ViewModel.model.user.guser);
 }
 
 function _renderLoginButton() {

@@ -15,7 +15,6 @@
 
 const Constants = require('../../../../assets/js/constants');
 const MainMap = require('./mainmap');
-const Google = require('./google');
 const ViewModel = require('./viewmodel');
 
 let shell = module.exports;
@@ -60,15 +59,15 @@ shell.addBathroom = function() {
 	MainMap.openPanel();
 	hideLoading();
 
-	ViewModel.view.panel.display.detail = '';
-	ViewModel.view.panel.display.add = 'true';
+	ViewModel.model.view.panel.display.detail = '';
+	ViewModel.model.view.panel.display.add = 'true';
 
 
 	// Let the map be draggable to allow precise adding of bathrooms
 	let options = Object.assign({}, DEFAULT_SMALL_MAP_OPTIONS);
 	options.draggable = true;
 
-	const { lat, lng } = MainMap.location;
+	const { lat, lng } = ViewModel.model.map.location;
 	initMap({ lat, lng }, options);
 };
 
@@ -81,10 +80,10 @@ shell.downvote = function() {
 };
 
 function vote(score) {
-	$http(`${Constants.API.URL}bathroom/vote/${score}/${MainMap.selectedBathroom.id}`)
+	$http(`${Constants.API.URL}bathroom/vote/${score}/${ViewModel.model.map.selectedBathroom.id}`)
 		.post({
-			gid: Google.guser.id,
-			ukey: Google.guser.token
+			gid: ViewModel.model.user.guser.id,
+			ukey: ViewModel.model.user.guser.token
 		})
 		.then(aggregatedVotes => {
 			iqwerty.toast.Toast('Thank you for your contribution!');
@@ -95,7 +94,7 @@ function vote(score) {
 			delete votes.total_score;
 
 			Object.keys(votes).forEach(vote => {
-				MainMap.selectedBathroom[vote] = votes[vote];
+				ViewModel.model.map.selectedBathroom[vote] = votes[vote];
 			});
 		})
 		.catch(() => iqwerty.toast.Toast('You must be logged in to vote'));
@@ -122,7 +121,7 @@ function initMap(location, options = DEFAULT_SMALL_MAP_OPTIONS) {
 	_map = new google.maps.Map(document.getElementById(MAP_VIEW_SMALL), options);
 	_map.setCenter({ lat: location.lat, lng: location.lng });
 
-	const { lat, lng, accuracy } = MainMap.location;
+	const { lat, lng, accuracy } = ViewModel.model.map.location;
 	MainMap.addMyLocationMarker(_map, { lat, lng }, accuracy);
 }
 
@@ -140,8 +139,8 @@ function attachBathroom(bathroom) {
 function bindBathroomData(bathroom) {
 	hideLoading();
 
-	ViewModel.view.panel.display.detail = 'true';
-	ViewModel.view.panel.display.add = '';
+	ViewModel.model.view.panel.display.detail = 'true';
+	ViewModel.model.view.panel.display.add = '';
 
-	Object.assign(MainMap.selectedBathroom, bathroom);
+	Object.assign(ViewModel.model.map.selectedBathroom, bathroom);
 }

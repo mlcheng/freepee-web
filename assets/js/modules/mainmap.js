@@ -15,6 +15,7 @@
 
 const Constants = require('../../../../assets/js/constants');
 const Bathroom = require('./bathroom');
+const ViewModel = require('./viewmodel');
 const fs = require('fs');
 
 /**
@@ -53,21 +54,6 @@ let _markerClusterer;
  * @type {Object}
  */
 let _infoWindow = null;
-
-
-/**
- * The selected bathroom; used for data binding on the panel
- * @type {Object}
- */
-shell.selectedBathroom = {};
-
-/**
- * The search query, used for data binding
- * @type {Object}
- */
-shell.search = { place: '' };
-
-shell.location = {};
 
 shell.BaseStateController = function() {
 	shell.closePanel();
@@ -162,25 +148,26 @@ function initBasicMap() {
 // }
 
 function initMap(position) {
-	var coords = position.coords;
-	shell.location = {
+	let coords = position.coords;
+	let mapModel = ViewModel.model.map;
+	mapModel.location = {
 		lat: coords.latitude,
 		lng: coords.longitude,
 		accuracy: coords.accuracy
 	};
 
-	var options = Object.assign({}, DEFAULT_MAP_OPTIONS);
+	let options = Object.assign({}, DEFAULT_MAP_OPTIONS);
 
 	//The following will mutate the default options!!
 	options.zoom = 20;
 	options.center = {
-		lat: shell.location.lat,
-		lng: shell.location.lng
+		lat: mapModel.location.lat,
+		lng: mapModel.location.lng
 	};
 	_map = new google.maps.Map(document.getElementById(MAP_VIEW), options);
 
 	//Add location marker to map
-	shell.addMyLocationMarker(_map, options.center, shell.location.accuracy);
+	shell.addMyLocationMarker(_map, options.center, mapModel.location.accuracy);
 
 	updateMapOnMoved();
 }
@@ -220,7 +207,7 @@ function attachBathrooms(bathrooms) {
 	bathrooms
 		.filter(bathroom => !_markers.find(exists => bathroom.id === exists.id))
 		.forEach(bathroom => {
-			//console.info('Attaching new bathroom', bathroom);
+			console.info('Attaching new bathroom', bathroom);
 			var marker = new google.maps.Marker({
 				position: {
 					lat: bathroom.lat,

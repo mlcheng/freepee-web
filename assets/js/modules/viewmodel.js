@@ -14,23 +14,49 @@
 
 /* globals module, require, serverRoot, iqwerty */
 
+const Constants = require('../../../../assets/js/constants');
 const MainMap = require('./mainmap');
-const Google = require('./google');
 
 let shell = module.exports;
 
-shell.view = {
-	guser: {
-		signedIn: false
-	},
-	panel: {
-		display: {
-			detail: 'false',
-			add: 'false'
+shell.model = {
+	map: {
+		/**
+		 * The selected bathroom; used for data binding on the panel
+		 * @type {Object}
+		 */
+		selectedBathroom: {},
+		/**
+		 * The search query, used for data binding
+		 * @type {Object}
+		 */
+		search: {
+			place: ''
 		},
-		add: {
-			approx_address: null,
-			description: null
+		location: {}
+	},
+	user: {
+		guser: {
+			token: '',
+			name: '',
+			id: '',
+			gpURL: '',
+			pic: Constants.ToiletImage.BATHROOM_MARKER
+		}
+	},
+	view: {
+		guser: {
+			signedIn: false
+		},
+		panel: {
+			display: {
+				detail: 'false',
+				add: 'false'
+			},
+			add: {
+				approx_address: null,
+				description: null
+			}
 		}
 	}
 };
@@ -39,8 +65,8 @@ shell.template = {
 	bindBathroomData() {
 		//Add the selected bathroom to the binding model
 		iqwerty.binding.Model({
-			bathroom: MainMap.selectedBathroom,
-			search: MainMap.search
+			bathroom: shell.model.map.selectedBathroom,
+			search: shell.model.map.search
 		});
 
 		/**
@@ -57,8 +83,8 @@ shell.template = {
 
 	bindToolbarData() {
 		iqwerty.binding.Model({
-			guser: Google.guser,
-			view: shell.view
+			guser: shell.model.user.guser,
+			view: shell.model.view
 		});
 	}
 };

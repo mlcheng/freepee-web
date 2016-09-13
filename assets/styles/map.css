@@ -69,14 +69,6 @@ html, body {
 	color: rgba(255, 255, 255, .8);
 }
 
-#toolbar .signed-in-user > div:not([data-guser-signed-in="true"]) {
-	display: none;
-}
-
-#toolbar .signed-in-user > div {
-	display: initial;
-}
-
 #toolbar .signed-in-user .user--name {
 	margin: 0 10px;
 	letter-spacing: -0.5px;
@@ -435,6 +427,10 @@ textarea.full-width {
 
 button {
 	cursor: pointer;
+}
+
+*[data-show="false"], *[data-hide="true"] {
+	display: none !important;
 }
 
 
