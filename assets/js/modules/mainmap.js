@@ -252,6 +252,6 @@ function getInfoWindowContent(bathroom) {
 	// `bathroom` is used in the template
 
 	// jshint evil:true, unused:false
-	let template = fs.readFileSync('mobile/assets/templates/infowindow.html', 'utf8');
+	let template = fs.readFileSync('mobile/assets/templates/info-window.html', 'utf8');
 	return eval('`' + template + '`');
 }
