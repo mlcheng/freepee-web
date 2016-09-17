@@ -172,6 +172,6 @@ function getMyRating(id, gid) {
 			gid
 		})
 		.then(rating => {
-			ViewModel.model.map.selectedBathroom.myRating = rating;
+			ViewModel.model.map.selectedBathroom.myRating = JSON.parse(rating).my_rating;
 		});
 }
