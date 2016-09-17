@@ -137,6 +137,7 @@ function locationAvailable() {
 
 function initBasicMap() {
 	_map = new google.maps.Map(document.getElementById(MAP_VIEW), DEFAULT_MAP_OPTIONS);
+	ViewModel.model.map.instance = _map;
 	updateMapOnMoved();
 }
 
@@ -165,6 +166,7 @@ function initMap(position) {
 		lng: mapModel.location.lng
 	};
 	_map = new google.maps.Map(document.getElementById(MAP_VIEW), options);
+	ViewModel.model.map.instance = _map;
 
 	//Add location marker to map
 	shell.addMyLocationMarker(_map, options.center, mapModel.location.accuracy);
@@ -207,7 +209,7 @@ function attachBathrooms(bathrooms) {
 	bathrooms
 		.filter(bathroom => !_markers.find(exists => bathroom.id === exists.id))
 		.forEach(bathroom => {
-			console.info('Attaching new bathroom', bathroom);
+			// console.info('Attaching new bathroom', bathroom);
 			var marker = new google.maps.Marker({
 				position: {
 					lat: bathroom.lat,

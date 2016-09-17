@@ -10,7 +10,7 @@
 	</div>
 
 	<div id="panel-view">
-		<div data-iq-bind-to="data-display:view.panel.display.detail">
+		<div data-iq-bind-to="data-show:view.panel.display.detail">
 			<div class="detail" data-iq-bind>
 				<div class="card">
 					<div class="card--title">Address</div>
@@ -21,11 +21,13 @@
 					<div class="card--description">
 						<span
 							class="vote vote--upvote"
+							data-iq-bind-to="data-selected:bathroom.myRating"
 							onclick="iqwerty.freepee.Bathroom.upvote()">
 							{bathroom.upvotes}
 						</span>
 						<span
 							class="vote vote--downvote"
+							data-iq-bind-to="data-selected:bathroom.myRating"
 							onclick="iqwerty.freepee.Bathroom.downvote()">
 							{bathroom.downvotes}
 						</span>
@@ -37,7 +39,7 @@
 				</div>
 			</div>
 		</div>
-		<div data-iq-bind-to="data-display:view.panel.display.add">
+		<div data-iq-bind-to="data-show:view.panel.display.add">
 			<div class="detail" data-iq-bind>
 				<div class="card">
 					<div class="card--title">Address</div>

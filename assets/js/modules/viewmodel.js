@@ -33,7 +33,8 @@ shell.model = {
 		search: {
 			place: ''
 		},
-		location: {}
+		location: {},
+		instance: null
 	},
 	user: {
 		guser: {

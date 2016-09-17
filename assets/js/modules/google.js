@@ -69,11 +69,12 @@ function _signInChanged(signedIn) {
 		document.getElementById(SIGN_IN_BUTTON).style.display = 'none';
 
 		// Login the user
+		let user = ViewModel.model.user.guser;
 		$http(`${Constants.API.URL}login`)
-		.post({
-			gid: shell.guser.id,
-			ukey: shell.guser.token
-		});
+			.post({
+				gid: user.id,
+				ukey: user.token
+			});
 	} else {
 		document.getElementById(SIGN_IN_BUTTON).style.display = '';			
 	}

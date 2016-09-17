@@ -45,8 +45,19 @@ shell.openPanel = function(id) {
 		.then(bathroom => {
 			bathroom = JSON.parse(bathroom)[0];
 			bindBathroomData(bathroom);
-			initMap({ lat: bathroom.lat, lng: bathroom.lng });
+			initMap({
+				lat: bathroom.lat,
+				lng: bathroom.lng
+			});
 			attachBathroom(bathroom);
+
+			if(ViewModel.model.user.guser.id) {
+				/*
+				This won't get called if the URL is direct to a bathroom.
+				This is because Google login is deferred and there's no event to listen to to get the rating.
+				 */
+				getMyRating(id, ViewModel.model.user.guser.id);
+			}
 		});
 };
 
@@ -59,7 +70,7 @@ shell.addBathroom = function() {
 	MainMap.openPanel();
 	hideLoading();
 
-	ViewModel.model.view.panel.display.detail = '';
+	ViewModel.model.view.panel.display.detail = 'false';
 	ViewModel.model.view.panel.display.add = 'true';
 
 
@@ -68,7 +79,13 @@ shell.addBathroom = function() {
 	options.draggable = true;
 
 	const { lat, lng } = ViewModel.model.map.location;
-	initMap({ lat, lng }, options);
+
+	const center = ViewModel.model.map.instance.getCenter();
+	
+	initMap({ lat, lng }, {
+		lat: center.lat(),
+		lng: center.lng()
+	}, options);
 };
 
 shell.upvote = function() {
@@ -96,6 +113,8 @@ function vote(score) {
 			Object.keys(votes).forEach(vote => {
 				ViewModel.model.map.selectedBathroom[vote] = votes[vote];
 			});
+
+			ViewModel.model.map.selectedBathroom.myRating = score === 'up' ? 1 : -1;
 		})
 		.catch(() => iqwerty.toast.Toast('You must be logged in to vote'));
 }
@@ -108,7 +127,7 @@ function hideLoading() {
 	document.querySelector('.' + Constants.Iden.LOADING).classList.add(Constants.Iden.HIDDEN);
 }
 
-function initMap(location, options = DEFAULT_SMALL_MAP_OPTIONS) {
+function initMap(location, center = location, options = DEFAULT_SMALL_MAP_OPTIONS) {
 	if(typeof google === 'undefined') {
 		/*
 		OMG. Such a bad hack
@@ -118,8 +137,9 @@ function initMap(location, options = DEFAULT_SMALL_MAP_OPTIONS) {
 		 */
 		setTimeout(() => initMap(location, options), 100);
 	}
+
 	_map = new google.maps.Map(document.getElementById(MAP_VIEW_SMALL), options);
-	_map.setCenter({ lat: location.lat, lng: location.lng });
+	_map.setCenter({ lat: center.lat, lng: center.lng });
 
 	const { lat, lng, accuracy } = ViewModel.model.map.location;
 	MainMap.addMyLocationMarker(_map, { lat, lng }, accuracy);
@@ -140,7 +160,18 @@ function bindBathroomData(bathroom) {
 	hideLoading();
 
 	ViewModel.model.view.panel.display.detail = 'true';
-	ViewModel.model.view.panel.display.add = '';
+	ViewModel.model.view.panel.display.add = 'false';
 
 	Object.assign(ViewModel.model.map.selectedBathroom, bathroom);
+}
+
+function getMyRating(id, gid) {
+	$http(`${Constants.API.URL}bathroom/query/id/${id}`)
+		.get({
+			vote: true,
+			gid
+		})
+		.then(rating => {
+			ViewModel.model.map.selectedBathroom.myRating = rating;
+		});
 }

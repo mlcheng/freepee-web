@@ -136,15 +136,6 @@ html, body {
 	transform: translate(5%, -200%);
 }
 
-#panel-view > div {
-	display: none;
-}
-
-/* The panel-view with an ID that's not blank */
-#panel-view > [data-display="true"] {
-	display: initial;
-}
-
 #panel .wrapper {
 	padding: 20px;
 }
@@ -217,7 +208,9 @@ html, body {
 	width: 30px;
 }
 
-#panel .vote:hover {
+#panel .vote:hover,
+#panel .vote--upvote[data-selected="1"],
+#panel .vote--downvote[data-selected="-1"] {
 	opacity: 1;
 }
 
