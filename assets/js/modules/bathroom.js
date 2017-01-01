@@ -16,6 +16,7 @@
 const Constants = require('../../../../assets/js/constants');
 const MainMap = require('./mainmap');
 const ViewModel = require('./viewmodel');
+const Google = require('./google');
 
 let shell = module.exports;
 
@@ -67,6 +68,19 @@ shell.closePanel = function() {
 };
 
 shell.addBathroom = function() {
+	if(!ViewModel.model.user.guser.token) {
+		// User isn't logged in
+		iqwerty.snackbar.Snackbar('You are not logged in', 'Login',
+			Google.signIn,
+			{
+				settings: {
+					duration: 6000
+				}
+			}
+		);
+		return;
+	}
+
 	MainMap.openPanel();
 	hideLoading();
 
@@ -81,7 +95,7 @@ shell.addBathroom = function() {
 	const { lat, lng } = ViewModel.model.map.location;
 
 	const center = ViewModel.model.map.instance.getCenter();
-	
+
 	initMap({ lat, lng }, {
 		lat: center.lat(),
 		lng: center.lng()
@@ -172,6 +186,6 @@ function getMyRating(id, gid) {
 			gid
 		})
 		.then(rating => {
-			ViewModel.model.map.selectedBathroom.myRating = JSON.parse(rating).my_rating;
+			ViewModel.model.map.selectedBathroom.myRating = JSON.parse(rating).vote;
 		});
 }

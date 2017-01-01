@@ -42,15 +42,17 @@ shell.loadAuth = function() {
 	});
 };
 
+shell.signIn = function() {
+	document.getElementById(SIGN_IN_BUTTON).children[0].click();
+};
+
 shell.loginSuccess = function() {
 
 };
 
 shell.loginFailure = function() {
 	iqwerty.snackbar.Snackbar('Login failed', 'Try again',
-		function() {
-			document.getElementById(SIGN_IN_BUTTON).children[0].click();
-		},
+		shell.signIn,
 		{
 			settings: {
 				duration: 6000
@@ -76,7 +78,7 @@ function _signInChanged(signedIn) {
 				ukey: user.token
 			});
 	} else {
-		document.getElementById(SIGN_IN_BUTTON).style.display = '';			
+		document.getElementById(SIGN_IN_BUTTON).style.display = '';
 	}
 }
 
