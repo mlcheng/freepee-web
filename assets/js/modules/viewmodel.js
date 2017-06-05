@@ -51,7 +51,9 @@ shell.model = {
 		},
 		panel: {
 			display: {
+				// Sets whether or not the view is for bathroom details.
 				detail: 'false',
+				// Sets whether or not the view is for adding a bathroom.
 				add: 'false'
 			},
 			add: {
@@ -64,7 +66,7 @@ shell.model = {
 
 shell.template = {
 	bindBathroomData() {
-		//Add the selected bathroom to the binding model
+		// Add the selected bathroom to the binding model
 		iqwerty.binding.Model({
 			bathroom: shell.model.map.selectedBathroom,
 			search: shell.model.map.search

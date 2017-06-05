@@ -100,6 +100,17 @@ shell.addBathroom = function() {
 		lat: center.lat(),
 		lng: center.lng()
 	}, options);
+
+	_map.addListener('idle', () => {
+		$http(`${Constants.API.GOOGLE_GEODECODE_URL}${_map.center.lat()},${_map.center.lng()}`)
+			.get()
+			.then(response => {
+				response = JSON.parse(response);
+				// The response is an array, ordered from most accurate to
+				// least accurate.
+				ViewModel.model.view.panel.add.approx_address = response.results.shift().formatted_address;
+			});
+	});
 };
 
 shell.upvote = function() {
