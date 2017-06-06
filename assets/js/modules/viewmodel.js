@@ -58,7 +58,8 @@ shell.model = {
 			},
 			add: {
 				approx_address: null,
-				description: null
+				description: null,
+				submitDisabled: false,
 			}
 		}
 	}

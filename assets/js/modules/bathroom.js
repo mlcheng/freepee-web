@@ -113,6 +113,29 @@ shell.addBathroom = function() {
 	});
 };
 
+/**
+ * Submit the form for adding a bathroom.
+ */
+shell.create = function() {
+	// First disable the submit button
+	ViewModel.model.view.panel.add.submitDisabled = true;
+
+	// Then send the network request
+	$http(`${Constants.API.URL}bathroom/create`)
+		.post()
+		.then(response => {
+			ViewModel.model.view.panel.add.submitDisabled = false;
+		})
+		.catch(() => {
+			ViewModel.model.view.panel.add.submitDisabled = false;
+
+			// Allow the user to reload the page if they wish.
+			iqwerty.snackbar.Snackbar('Sorry, there was an error. Try reloading the page?', 'Reload', () => {
+				window.location.reload();
+			});
+		});
+};
+
 shell.upvote = function() {
 	vote('up');
 };

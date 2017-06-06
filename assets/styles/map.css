@@ -47,7 +47,7 @@ html, body {
 #toolbar #free-pee {
 	font-size: 120%;
 	font-weight: 200;
-	letter-spacing: 1.5px;
+	letter-spacing: 0.5px;
 	cursor: default;
 	padding: 0 10px;
 	border-radius: 2px;
@@ -110,6 +110,7 @@ html, body {
 	z-index: 2;
 	opacity: 1;
 	transition: opacity 400ms ease-out;
+	will-change: opacity;
 }
 
 #overlay.hidden {
@@ -130,6 +131,7 @@ html, body {
 	transform: translate(5%, 5%);
 	transition: transform 400ms ease-out;
 	-webkit-filter: blur(0);
+	will-change: transform;
 }
 
 #panel.hidden {
@@ -390,6 +392,7 @@ textarea.full-width {
 .button {
 	background: #00838f;
 	border-radius: 3px;
+	border: none;
 	color: white;
 	padding: 8px;
 	cursor: pointer;
@@ -400,6 +403,17 @@ textarea.full-width {
 
 .button:hover, .button:focus {
 	background: rgba(0, 131, 143, .85);
+}
+
+.button:disabled {
+	background: #cfd8dc;
+	cursor: not-allowed;
+}
+
+.action {
+	text-transform: uppercase;
+	width: 100%;
+	padding: 15px;
 }
 
 .left {

@@ -43,7 +43,9 @@
 			<div class="detail" data-iq-bind>
 				<div class="card">
 					<div class="card--title">Address</div>
-					<div class="card--description">{view.panel.add.approx_address}</div>
+					<div class="card--description">
+						{view.panel.add.approx_address}
+					</div>
 				</div>
 				<div class="card">
 					<div class="card--title">Description</div>
@@ -52,6 +54,12 @@
 					</div>
 				</div>
 			</div>
+			<button
+				class="button action"
+				onclick="iqwerty.freepee.Bathroom.create()"
+				data-iq-bind-to="disabled:view.panel.add.submitDisabled">
+				Create
+			</button>
 		</div>
 	</div>
 </div>
