@@ -118,6 +118,7 @@ shell.addMyLocationMarker = function(map, location, accuracy) {
 	});
 	myLocation.setMap(map);
 	new google.maps.Circle({
+		clickable: false, // This allows the click event to be consumed by the map
 		strokeColor: '#00838f',
 		strokeWeight: 1,
 		fillColor: '#00838f',
@@ -182,6 +183,8 @@ function initMap(position) {
 	shell.addMyLocationMarker(_map, options.center, mapModel.location.accuracy);
 
 	updateMapOnMoved();
+
+	addBathroomOnClick();
 }
 
 /**
@@ -189,6 +192,16 @@ function initMap(position) {
  */
 function updateMapOnMoved() {
 	_map.addListener('idle', getBathrooms);
+}
+
+/**
+ * Open the panel to add a bathroom when it is clicked.
+ */
+function addBathroomOnClick() {
+	console.log('adding listener', _map);
+	_map.addListener('click', event => {
+		Bathroom.addBathroom(event.latLng);
+	});
 }
 
 /**

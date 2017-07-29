@@ -68,7 +68,7 @@ shell.closePanel = function() {
 	_map = null;
 };
 
-shell.addBathroom = function() {
+shell.addBathroom = function(center = ViewModel.model.map.instance.getCenter()) {
 	if(!ViewModel.model.user.guser.token) {
 		// User isn't logged in
 		iqwerty.snackbar.Snackbar('You are not logged in', 'Login',
@@ -95,8 +95,6 @@ shell.addBathroom = function() {
 
 	const { lat, lng } = ViewModel.model.map.location;
 
-	const center = ViewModel.model.map.instance.getCenter();
-
 	initMap({ lat, lng }, {
 		lat: center.lat(),
 		lng: center.lng()
@@ -118,6 +116,9 @@ shell.addBathroom = function() {
  * Submit the form for adding a bathroom.
  */
 shell.create = function() {
+	// Description textarea, used to get and clear the value.
+	const description = document.querySelector('#panel-view textarea.description');
+
 	// First disable the submit button
 	ViewModel.model.view.panel.add.submitDisabled = true;
 
@@ -127,10 +128,13 @@ shell.create = function() {
 			gid: ViewModel.model.user.guser.id,
 			ukey: ViewModel.model.user.guser.token,
 			coords: `${_map.center.lat()},${_map.center.lng()}`,
-			desc: 'asd'
+			desc: description.value
 		})
-		.then(response => {
+		.then(() => {
 			ViewModel.model.view.panel.add.submitDisabled = false;
+			description.value = '';
+			iqwerty.toast.Toast('Thank you for your contribution!');
+			shell.closePanel();
 		})
 		.catch(() => {
 			ViewModel.model.view.panel.add.submitDisabled = false;
