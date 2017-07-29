@@ -129,6 +129,20 @@ shell.addMyLocationMarker = function(map, location, accuracy) {
 	});
 };
 
+/**
+ * Get bathrooms based on map center and zoom
+ */
+shell.getBathrooms = () => {
+	var coords = _map.getCenter();
+	$http(`${Constants.API.URL}bathroom/get/coords/${coords.lat()},${coords.lng()},${_map.getZoom()}z`)
+		.get()
+		.then(response => {
+			if(response) {
+				attachBathrooms(JSON.parse(response));
+			}
+		});
+};
+
 shell.toggleSearch = function() {
 	const search = document.getElementById(Constants.Iden.SEARCH);
 	search.classList.toggle(Constants.Iden.HIDDEN);
@@ -191,32 +205,16 @@ function initMap(position) {
  * Update map when it's panned
  */
 function updateMapOnMoved() {
-	_map.addListener('idle', getBathrooms);
+	_map.addListener('idle', shell.getBathrooms);
 }
 
 /**
  * Open the panel to add a bathroom when it is clicked.
  */
 function addBathroomOnClick() {
-	console.log('adding listener', _map);
-	_map.addListener('click', event => {
+	_map.addListener('rightclick', event => {
 		Bathroom.addBathroom(event.latLng);
 	});
-}
-
-/**
- * Get bathrooms based on map center and zoom
- */
-function getBathrooms() {
-	var coords = _map.getCenter();
-	$http(`${Constants.API.URL}bathroom/get/coords/${coords.lat()},${coords.lng()},${_map.getZoom()}z`)
-		.cache()
-		.get()
-		.then(response => {
-			if(response) {
-				attachBathrooms(JSON.parse(response));
-			}
-		});
 }
 
 /**

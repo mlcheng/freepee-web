@@ -135,6 +135,7 @@ shell.create = function() {
 			description.value = '';
 			iqwerty.toast.Toast('Thank you for your contribution!');
 			shell.closePanel();
+			MainMap.getBathrooms();
 		})
 		.catch(() => {
 			ViewModel.model.view.panel.add.submitDisabled = false;
