@@ -38,28 +38,28 @@ let _map;
 
 shell.openPanel = function(id) {
 	showLoading();
-	MainMap.openPanel();
+	MainMap.openPanel().then(() => {
+		$http(`${Constants.API.URL}bathroom/get/id/${id}`)
+			.cache()
+			.get()
+			.then(bathroom => {
+				bathroom = JSON.parse(bathroom)[0];
+				bindBathroomData(bathroom);
+				initMap({
+					lat: bathroom.lat,
+					lng: bathroom.lng
+				});
+				attachBathroom(bathroom);
 
-	$http(`${Constants.API.URL}bathroom/get/id/${id}`)
-		.cache()
-		.get()
-		.then(bathroom => {
-			bathroom = JSON.parse(bathroom)[0];
-			bindBathroomData(bathroom);
-			initMap({
-				lat: bathroom.lat,
-				lng: bathroom.lng
+				if(ViewModel.model.user.guser.id) {
+					/*
+					This won't get called if the URL is direct to a bathroom.
+					This is because Google login is deferred and there's no event to listen to to get the rating.
+					 */
+					getMyRating(id, ViewModel.model.user.guser.id);
+				}
 			});
-			attachBathroom(bathroom);
-
-			if(ViewModel.model.user.guser.id) {
-				/*
-				This won't get called if the URL is direct to a bathroom.
-				This is because Google login is deferred and there's no event to listen to to get the rating.
-				 */
-				getMyRating(id, ViewModel.model.user.guser.id);
-			}
-		});
+	});
 };
 
 shell.closePanel = function() {
@@ -102,7 +102,7 @@ shell.addBathroom = function() {
 	}, options);
 
 	_map.addListener('idle', () => {
-		$http(`${Constants.API.GOOGLE_GEODECODE_URL}${_map.center.lat()},${_map.center.lng()}`)
+		$http(`${Constants.API.URL}geocode/get/coords/${_map.center.lat()},${_map.center.lng()}`)
 			.get()
 			.then(response => {
 				response = JSON.parse(response);

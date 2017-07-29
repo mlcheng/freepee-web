@@ -31,7 +31,6 @@ require_once("../functions.php");
 		<script src="<?= Constants::IQ_LIB_PATH ?>quantum/quantum.js"></script>
 
 		<!-- Dev scripts -->
-		<!-- <script src="<?= Config::$serverRoot ?>assets/js/constants.min.js"></script> -->
 		<script src="<?= Config::$serverRoot ?>mobile/assets/js/MarkerClusterer.min.js"></script>
 		<script src="<?= Config::$serverRoot ?>mobile/assets/js/freepee.mod.js"></script>
 

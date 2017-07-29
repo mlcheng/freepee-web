@@ -68,6 +68,16 @@ shell.openPanel = function() {
 	var overlay = document.getElementById('overlay');
 	panel.classList.remove(Constants.Iden.HIDDEN);
 	overlay.classList.remove(Constants.Iden.HIDDEN);
+
+	// Use a promise to do things after the transition end. Hopefully this helps with performance.
+	return new Promise(resolve => {
+		let _onTransitionEnd = () => {
+			panel.removeEventListener('transitionend', _onTransitionEnd);
+			resolve();
+		};
+
+		panel.addEventListener('transitionend', _onTransitionEnd);
+	});
 };
 
 shell.closePanel = function() {
