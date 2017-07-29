@@ -24,7 +24,7 @@ require_once("../functions.php");
 		<script>
 		'use strict';
 		/* exported serverRoot */
-		var serverRoot = '<?= Config::$serverRoot ?>';
+		const serverRoot = '<?= Config::$serverRoot ?>';
 		</script>
 
 		<!-- iQwerty Quantum.js -->

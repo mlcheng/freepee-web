@@ -14,6 +14,7 @@
 /* globals module, require, $http, iqwerty, google */
 
 const Constants = require('../../../../assets/js/constants');
+const Util = require('../../../../assets/js/util');
 const MainMap = require('./mainmap');
 const ViewModel = require('./viewmodel');
 const Google = require('./google');
@@ -122,7 +123,12 @@ shell.create = function() {
 
 	// Then send the network request
 	$http(`${Constants.API.URL}bathroom/create`)
-		.post()
+		.post({
+			gid: ViewModel.model.user.guser.id,
+			ukey: ViewModel.model.user.guser.token,
+			coords: `${_map.center.lat()},${_map.center.lng()}`,
+			desc: 'asd'
+		})
 		.then(response => {
 			ViewModel.model.view.panel.add.submitDisabled = false;
 		})
@@ -209,6 +215,10 @@ function bindBathroomData(bathroom) {
 
 	ViewModel.model.view.panel.display.detail = 'true';
 	ViewModel.model.view.panel.display.add = 'false';
+
+	// Sanitize the description
+	console.log(bathroom);
+	bathroom.description = Util.sanitize(bathroom.description);
 
 	Object.assign(ViewModel.model.map.selectedBathroom, bathroom);
 }
