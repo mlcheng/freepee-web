@@ -126,6 +126,10 @@ shell.editBathroom = (el) => {
 	// TODO: Check if user is logged in
 	el.contentEditable = true;
 	el.focus();
+	el.addEventListener('blur', () => {
+		// TOOD: Send edit request.
+		el.removeAttribute('contenteditable');
+	});
 };
 
 /**

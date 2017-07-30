@@ -218,6 +218,11 @@ html, body {
 /**
  * Material stuff for text inputs!!
  */
+#panel .can-edit:not([contenteditable]):hover {
+	cursor: pointer;
+	background: rgba(0, 0, 0, .05);
+}
+
 #panel [contenteditable] {
 	resize: none;
 	border: none;
@@ -455,14 +460,6 @@ textarea.full-width {
 
 .pre {
 	white-space: pre-wrap;
-}
-
-.can-edit {
-	cursor: pointer;
-}
-
-.can-edit:hover {
-	background: rgba(0, 0, 0, .05);
 }
 
 .left {
