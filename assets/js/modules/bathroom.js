@@ -71,6 +71,9 @@ shell.closePanel = function() {
 	_map = null;
 };
 
+/**
+ * Do the actions necessary to show the panel to add a bathroom
+ */
 shell.addBathroom = function(center = ViewModel.model.map.instance.getCenter()) {
 	if(!ViewModel.model.user.guser.token) {
 		// User isn't logged in
@@ -116,11 +119,21 @@ shell.addBathroom = function(center = ViewModel.model.map.instance.getCenter()) 
 };
 
 /**
+ * Perform the actions necessary to show the panel to edit a bathroom description.
+ * @param {HTMLElement} el The description element
+ */
+shell.editBathroom = (el) => {
+	// TODO: Check if user is logged in
+	el.contentEditable = true;
+	el.focus();
+};
+
+/**
  * Submit the form for adding a bathroom.
  */
 shell.create = function() {
 	// Description textarea, used to get and clear the value.
-	const description = document.querySelector('#panel-view textarea.description');
+	const description = document.querySelector('#panel-view [contenteditable]');
 
 	// First disable the submit button
 	ViewModel.model.view.panel.add.submitDisabled = true;
@@ -131,11 +144,11 @@ shell.create = function() {
 			gid: ViewModel.model.user.guser.id,
 			ukey: ViewModel.model.user.guser.token,
 			coords: `${_map.center.lat()},${_map.center.lng()}`,
-			desc: description.value
+			desc: description.innerText
 		})
 		.then(() => {
 			ViewModel.model.view.panel.add.submitDisabled = false;
-			description.value = '';
+			description.innerText = '';
 			iqwerty.toast.Toast('Thank you for your contribution!');
 			shell.closePanel();
 			MainMap.getBathrooms();

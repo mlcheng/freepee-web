@@ -180,7 +180,7 @@ html, body {
 }
 
 #panel .card .card--description {
-	margin: 10px 15px;
+	padding: 10px 15px;
 }
 
 #panel .vote {
@@ -215,16 +215,45 @@ html, body {
 	opacity: 1;
 }
 
-#panel textarea.description {
+/**
+ * Material stuff for text inputs!!
+ */
+#panel [contenteditable] {
 	resize: none;
 	border: none;
-	border-bottom: 2px solid;
+	min-height: 60px;
+	padding: 5px;
+	position: relative;
 }
 
-#panel textarea.description:focus {
+#panel [contenteditable]::before, #panel [contenteditable]::after {
+	content: '';
+	border-bottom: 1px solid rgba(0, 0, 0, .3);
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+
+#panel [contenteditable]::after {
+	width: 0;
+	margin: auto;
+	transition: width 300ms;
+}
+
+#panel [contenteditable]:focus {
 	outline: none;
 }
 
+#panel [contenteditable]:focus::after {
+	border-color: #00838f;
+	border-width: 2px;
+	width: 100%;
+}
+
+/**
+ * Search stuff
+ */
 #search {
 	display: flex;
 	position: fixed;
@@ -420,12 +449,20 @@ textarea.full-width {
 	background: #f44336;
 }
 
-.negative:hover {
+.negative:hover, .negative:focus {
 	background: rgba(244,67,54, 0.85);
 }
 
 .pre {
 	white-space: pre-wrap;
+}
+
+.can-edit {
+	cursor: pointer;
+}
+
+.can-edit:hover {
+	background: rgba(0, 0, 0, .05);
 }
 
 .left {

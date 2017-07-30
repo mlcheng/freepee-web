@@ -14,7 +14,9 @@
 			<div class="detail" data-iq-bind>
 				<div class="card">
 					<div class="card--title">Address</div>
-					<div class="card--description">{bathroom.approx_address}</div>
+					<div class="card--description">
+						{bathroom.approx_address}
+					</div>
 				</div>
 				<div class="card">
 					<div class="card--title">Rating</div>
@@ -35,7 +37,10 @@
 				</div>
 				<div class="card">
 					<div class="card--title">Description</div>
-					<div class="card--description pre">{bathroom.description}</div>
+					<!-- The description cannot start on a new line because it's preformatted -->
+					<div
+						class="card--description pre can-edit"
+						onclick="iqwerty.freepee.Bathroom.editBathroom(this)">{bathroom.description}</div>
 				</div>
 			</div>
 			<button
@@ -56,7 +61,7 @@
 				<div class="card">
 					<div class="card--title">Description</div>
 					<div class="card--description">
-						<textarea class="description full-width"></textarea>
+						<div contenteditable autofocus><br></div>
 					</div>
 				</div>
 			</div>
