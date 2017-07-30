@@ -16,6 +16,7 @@
 const Constants = require('../../../../assets/js/constants');
 const Bathroom = require('./bathroom');
 const ViewModel = require('./viewmodel');
+const Util = require('../../../../assets/js/util');
 const fs = require('fs');
 
 /**

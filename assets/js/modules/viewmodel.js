@@ -54,7 +54,9 @@ shell.model = {
 				// Sets whether or not the view is for bathroom details.
 				detail: 'false',
 				// Sets whether or not the view is for adding a bathroom.
-				add: 'false'
+				add: 'false',
+				// Sets whether or not a the view can delete a bathroom
+				delete: 'true'
 			},
 			add: {
 				approx_address: null,

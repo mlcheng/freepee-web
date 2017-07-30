@@ -5,7 +5,7 @@
 
 	<div
 		id="map-view-small"
-		class="clear"
+		class="clear card"
 		data-iq-bind-to="data-marker:view.panel.display.add">
 	</div>
 
@@ -35,9 +35,15 @@
 				</div>
 				<div class="card">
 					<div class="card--title">Description</div>
-					<div class="card--description">{bathroom.description}</div>
+					<div class="card--description pre">{bathroom.description}</div>
 				</div>
 			</div>
+			<button
+				class="button action negative"
+				onclick="iqwerty.freepee.Bathroom.delete()"
+				data-iq-bind-to="disabled:view.panel.add.submitDisabled;data-show:view.panel.display.delete">
+				Delete
+			</button>
 		</div>
 		<div data-iq-bind-to="data-show:view.panel.display.add">
 			<div class="detail" data-iq-bind>

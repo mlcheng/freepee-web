@@ -48,12 +48,11 @@ html, body {
 #toolbar #free-pee {
 	font-size: 120%;
 	font-weight: 200;
-	letter-spacing: 0.5px;
 	cursor: default;
 	padding: 0 10px;
 	border-radius: 2px;
 	transition: background 500ms;
-	word-spacing: 3px;
+	word-spacing: -2px;
 }
 
 #toolbar #free-pee:hover {
@@ -156,7 +155,6 @@ html, body {
 
 #map-view-small {
 	height: 250px;
-	box-shadow: 0 0 8px rgba(0, 0, 0, .3);
 }
 
 #map-view-small[data-marker="true"]::after {
@@ -335,6 +333,7 @@ html, body {
 .button.button--info-window {
 	font-size: 140%;
 	min-width: 100px;
+	margin-left: 10px;
 }
 
 .fab {
@@ -415,6 +414,18 @@ textarea.full-width {
 	text-transform: uppercase;
 	width: 100%;
 	padding: 15px;
+}
+
+.negative {
+	background: #f44336;
+}
+
+.negative:hover {
+	background: rgba(244,67,54, 0.85);
+}
+
+.pre {
+	white-space: pre-wrap;
 }
 
 .left {

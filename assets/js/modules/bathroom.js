@@ -52,12 +52,15 @@ shell.openPanel = function(id) {
 				});
 				attachBathroom(bathroom);
 
-				if(ViewModel.model.user.guser.id) {
+				if(ViewModel.model.user.guser.id !== undefined) {
 					/*
 					This won't get called if the URL is direct to a bathroom.
 					This is because Google login is deferred and there's no event to listen to to get the rating.
 					 */
 					getMyRating(id, ViewModel.model.user.guser.id);
+
+					// Can the user delete the bathroom
+					ViewModel.model.view.panel.display.delete = bathroom.userid === ViewModel.model.user.guser.id;
 				}
 			});
 	});
