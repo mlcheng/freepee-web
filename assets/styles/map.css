@@ -224,11 +224,9 @@ html, body {
 }
 
 #panel [contenteditable] {
-	resize: none;
-	border: none;
 	min-height: 60px;
-	padding: 5px;
 	position: relative;
+	padding: 5px;
 }
 
 #panel [contenteditable]::before, #panel [contenteditable]::after {
@@ -244,6 +242,8 @@ html, body {
 	width: 0;
 	margin: auto;
 	transition: width 300ms;
+	border-color: #00838f;
+	border-width: 2px;
 }
 
 #panel [contenteditable]:focus {
@@ -251,8 +251,6 @@ html, body {
 }
 
 #panel [contenteditable]:focus::after {
-	border-color: #00838f;
-	border-width: 2px;
 	width: 100%;
 }
 
