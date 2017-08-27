@@ -127,23 +127,32 @@ shell.editBathroom = (el) => {
 		return; // User is not signed in.
 	}
 
+	// Stop listening for clicks it it's already in edit mode. This was a bug that caused many event listeners to be added if the div is clicked while it's already in edit mode. Thus, many blur listeners were also added...
+	if(el.contentEditable === 'true') return;
+
 	el.contentEditable = true;
 	el.focus();
-	el.addEventListener('blur', () => {
+
+	const origDesc = el.innerText;
+	el.addEventListener('blur', function blur() {
+		el.removeEventListener('blur', blur);
 		el.removeAttribute('contenteditable');
+
+		// Don't edit if the content didn't change.
+		if(el.innerText === origDesc) return;
 
 		// Send edit request.
 		$http(`${Constants.API.URL}bathroom/edit`)
-		.post({
-			gid: ViewModel.model.user.guser.id,
-			ukey: ViewModel.model.user.guser.token,
-			id: ViewModel.model.map.selectedBathroom.id,
-			desc: el.textContent
-		})
-		.then(() => {
-
-		})
-		.catch(() => iqwerty.toast.Toast('You must be logged in to edit'));
+			.post({
+				gid: ViewModel.model.user.guser.id,
+				ukey: ViewModel.model.user.guser.token,
+				id: ViewModel.model.map.selectedBathroom.id,
+				desc: el.innerText
+			})
+			.then(() => {
+				iqwerty.toast.Toast('Thank you for your contribution!');
+			})
+			.catch(() => iqwerty.toast.Toast('You must be logged in to edit'));
 	});
 };
 
@@ -163,11 +172,11 @@ shell.create = function() {
 			gid: ViewModel.model.user.guser.id,
 			ukey: ViewModel.model.user.guser.token,
 			coords: `${_map.center.lat()},${_map.center.lng()}`,
-			desc: description.textContent
+			desc: description.innerText
 		})
 		.then(() => {
 			ViewModel.model.view.panel.add.submitDisabled = false;
-			description.textContent = '';
+			description.innerText = '';
 			iqwerty.toast.Toast('Thank you for your contribution!');
 			shell.closePanel();
 			MainMap.getBathrooms();
