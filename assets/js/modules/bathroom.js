@@ -123,12 +123,27 @@ shell.addBathroom = function(center = ViewModel.model.map.instance.getCenter()) 
  * @param {HTMLElement} el The description element
  */
 shell.editBathroom = (el) => {
-	// TODO: Check if user is logged in
+	if(!ViewModel.model.view.guser.signedIn) {
+		return; // User is not signed in.
+	}
+
 	el.contentEditable = true;
 	el.focus();
 	el.addEventListener('blur', () => {
-		// TOOD: Send edit request.
 		el.removeAttribute('contenteditable');
+
+		// Send edit request.
+		$http(`${Constants.API.URL}bathroom/edit`)
+		.post({
+			gid: ViewModel.model.user.guser.id,
+			ukey: ViewModel.model.user.guser.token,
+			id: ViewModel.model.map.selectedBathroom.id,
+			desc: el.textContent
+		})
+		.then(() => {
+
+		})
+		.catch(() => iqwerty.toast.Toast('You must be logged in to edit'));
 	});
 };
 
@@ -148,11 +163,11 @@ shell.create = function() {
 			gid: ViewModel.model.user.guser.id,
 			ukey: ViewModel.model.user.guser.token,
 			coords: `${_map.center.lat()},${_map.center.lng()}`,
-			desc: description.innerText
+			desc: description.textContent
 		})
 		.then(() => {
 			ViewModel.model.view.panel.add.submitDisabled = false;
-			description.innerText = '';
+			description.textContent = '';
 			iqwerty.toast.Toast('Thank you for your contribution!');
 			shell.closePanel();
 			MainMap.getBathrooms();
