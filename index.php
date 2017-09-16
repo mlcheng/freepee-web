@@ -95,7 +95,5 @@ require_once("../functions.php");
 			class="fab fab--add-bathroom"
 			onclick="iqwerty.freepee.Bathroom.addBathroom();">
 		</button>
-
-		<script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1" async defer></' + 'script>')</script>
 	</body>
 </html>
