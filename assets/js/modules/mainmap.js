@@ -16,6 +16,7 @@
 const Constants = require('../../../../assets/js/constants');
 const Bathroom = require('./bathroom');
 const ViewModel = require('./viewmodel');
+/* exported Util */
 const Util = require('../../../../assets/js/util');
 const fs = require('fs');
 
@@ -273,7 +274,7 @@ function createInfoWindow() {
 }
 
 function getInfoWindowContent(bathroom) {
-	// `bathroom` is used in the template
+	// `bathroom` and `Util` is used in the template
 
 	// jshint evil:true, unused:false
 	let template = fs.readFileSync('mobile/assets/templates/info-window.html', 'utf8');

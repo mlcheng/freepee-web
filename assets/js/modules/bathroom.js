@@ -134,8 +134,7 @@ shell.editBathroom = (el) => {
 	el.focus();
 
 	const origDesc = el.innerText;
-	el.addEventListener('blur', function blur() {
-		el.removeEventListener('blur', blur);
+	el.addEventListener('blur', () => {
 		el.removeAttribute('contenteditable');
 
 		// Don't edit if the content didn't change.
@@ -153,6 +152,8 @@ shell.editBathroom = (el) => {
 				iqwerty.toast.Toast('Thank you for your contribution!');
 			})
 			.catch(() => iqwerty.toast.Toast('You must be logged in to edit'));
+	}, {
+		once: true
 	});
 };
 
