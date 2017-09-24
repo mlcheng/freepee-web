@@ -19,9 +19,10 @@ const MainMap = require('./modules/mainmap');
 const Bathroom = require('./modules/bathroom');
 const Google = require('./modules/google');
 const ViewModel = require('./modules/viewmodel');
+const Apis = require('./modules/apis');
 
 
 if(typeof module !== 'undefined') {
 	/* global module */
-	module.exports = { Constants, MainMap, Bathroom, Google, ViewModel };
+	module.exports = { Constants, MainMap, Bathroom, Google, ViewModel, Apis };
 }

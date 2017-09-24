@@ -43,11 +43,12 @@ require_once("../functions.php");
 		var iqwerty = iqwerty || {};
 		iqwerty.freepee = require('iqwerty-freepee');
 
-
 		// Google API callback functions
 		function __api_getLocation() {
 			iqwerty.freepee.MainMap.getLocation();
+			iqwerty.freepee.Apis.map.resolve();
 		}
+
 		function __api_loadAuth() {
 			iqwerty.freepee.Google.loadAuth();
 		}

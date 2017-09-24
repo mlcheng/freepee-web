@@ -18,6 +18,7 @@ const Util = require('../../../../assets/js/util');
 const MainMap = require('./mainmap');
 const ViewModel = require('./viewmodel');
 const Google = require('./google');
+const Apis = require('./apis');
 
 let shell = module.exports;
 
@@ -46,22 +47,21 @@ shell.openPanel = function(id) {
 			.then(bathroom => {
 				bathroom = JSON.parse(bathroom)[0];
 				bindBathroomData(bathroom);
-				initMap({
-					lat: bathroom.lat,
-					lng: bathroom.lng
-				});
-				attachBathroom(bathroom);
 
-				if(ViewModel.model.user.guser.id !== undefined) {
-					/*
-					This won't get called if the URL is direct to a bathroom.
-					This is because Google login is deferred and there's no event to listen to to get the rating.
-					 */
+				Apis.map.loaded().then(() => {
+					initMap({
+						lat: bathroom.lat,
+						lng: bathroom.lng
+					});
+					attachBathroom(bathroom);
+				});
+
+				Apis.auth.loaded().then(() => {
 					getMyRating(id, ViewModel.model.user.guser.id);
 
 					// Can the user delete the bathroom
 					ViewModel.model.view.panel.display.delete = bathroom.userid === ViewModel.model.user.guser.id;
-				}
+				});
 			});
 	});
 };
@@ -141,11 +141,10 @@ shell.editBathroom = (el) => {
 		if(el.innerText === origDesc) return;
 
 		// Send edit request.
-		$http(`${Constants.API.URL}bathroom/edit`)
+		$http(`${Constants.API.URL}bathroom/edit/id/${ViewModel.model.map.selectedBathroom.id}`)
 			.post({
 				gid: ViewModel.model.user.guser.id,
 				ukey: ViewModel.model.user.guser.token,
-				id: ViewModel.model.map.selectedBathroom.id,
 				desc: el.innerText
 			})
 			.then(() => {
@@ -160,7 +159,7 @@ shell.editBathroom = (el) => {
 /**
  * Submit the form for adding a bathroom.
  */
-shell.create = function() {
+shell.create = () => {
 	// Description textarea, used to get and clear the value.
 	const description = document.querySelector('#panel-view [contenteditable]');
 
@@ -192,11 +191,25 @@ shell.create = function() {
 		});
 };
 
-shell.upvote = function() {
+shell.delete = () => {
+	if(!window.confirm('Are you sure you want to delete this?')) return;
+
+	$http(`${Constants.API.URL}bathroom/delete/id/${ViewModel.model.map.selectedBathroom.id}`)
+		.post({
+			gid: ViewModel.model.user.guser.id,
+			ukey: ViewModel.model.user.guser.token
+		})
+		.then(() => {
+			// TODO: close the panel and reload the map.
+		})
+		.catch(() => iqwerty.toast.Toast('You must have added this bathroom to delete it.'));
+};
+
+shell.upvote = () => {
 	vote('up');
 };
 
-shell.downvote = function() {
+shell.downvote = () => {
 	vote('down');
 };
 
@@ -232,16 +245,6 @@ function hideLoading() {
 }
 
 function initMap(location, center = location, options = DEFAULT_SMALL_MAP_OPTIONS) {
-	if(typeof google === 'undefined') {
-		/*
-		OMG. Such a bad hack
-		The `google` object isn't necessarily available yet
-		But I will have so many callbacks to manage if I notify the panel when the Map API is loaded
-		So...just re-init the map if `google` isn't available yet...
-		 */
-		setTimeout(() => initMap(location, options), 100);
-	}
-
 	_map = new google.maps.Map(document.getElementById(MAP_VIEW_SMALL), options);
 	_map.setCenter({ lat: center.lat, lng: center.lng });
 

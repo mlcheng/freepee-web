@@ -15,6 +15,7 @@
 
 const Constants = require('../../../../assets/js/constants');
 const ViewModel = require('./viewmodel');
+const Apis = require('./apis');
 
 const SIGN_IN_BUTTON = 'sign-in--google';
 
@@ -84,7 +85,7 @@ function _signInChanged(signedIn) {
 
 function _userChanged(guser) {
 	_guser = guser;
-	var profile = guser.getBasicProfile();
+	const profile = guser.getBasicProfile();
 	if(!profile) return;
 
 	let userModel = ViewModel.model.user.guser;
@@ -98,6 +99,8 @@ function _userChanged(guser) {
 	if(userModel.token) {
 		ViewModel.model.view.guser.signedIn = true;
 	}
+
+	Apis.auth.resolve();
 
 	console.log(_guser, ViewModel.model.user.guser);
 }
