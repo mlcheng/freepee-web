@@ -145,6 +145,20 @@ shell.getBathrooms = () => {
 		});
 };
 
+/**
+ * Remove all markers and reload the map.
+ */
+shell.reloadMap = () => {
+	_markers.forEach(marker => {
+		marker.setMap(null); // Remove marker from map.
+	});
+	_markers.length = 0; // Clear the marker array.
+	_markerClusterer.clearMarkers(); // Clear the marker clusterer.
+
+	// Re-request bathrooms.
+	shell.getBathrooms();
+};
+
 shell.toggleSearch = function() {
 	const search = document.getElementById(Constants.Iden.SEARCH);
 	search.classList.toggle(Constants.Iden.HIDDEN);

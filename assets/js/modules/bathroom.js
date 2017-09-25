@@ -200,7 +200,9 @@ shell.delete = () => {
 			ukey: ViewModel.model.user.guser.token
 		})
 		.then(() => {
-			// TODO: close the panel and reload the map.
+			iqwerty.history.Push('');
+			shell.closePanel();
+			MainMap.reloadMap();
 		})
 		.catch(() => iqwerty.toast.Toast('You must have added this bathroom to delete it.'));
 };
