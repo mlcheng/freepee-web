@@ -31,6 +31,19 @@ html, body {
 	font-size: 16px;
 }
 
+body[data-writable=false]::before {
+	content: '(maintenance mode)';
+	color: #e57373;
+	font-weight: bold;
+	height: 45px;
+	line-height: 45px;
+	position: fixed;
+	top: 0;
+	right: 0;
+	left: 100px;
+	z-index: 2;
+}
+
 #toolbar {
 	box-shadow: 0 2px 2px rgba(0, 0, 0, .2);
 	background: #00838f;

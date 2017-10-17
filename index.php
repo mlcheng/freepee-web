@@ -65,7 +65,7 @@ require_once("../functions.php");
 
 		<title>Free Pee &sect; v2</title>
 	</head>
-	<body>
+	<body data-iq-bind-to="data-writable:view.database.writable">
 		<div id="overlay" class="hidden"></div>
 		<div
 			id="panel"

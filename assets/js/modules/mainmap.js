@@ -294,3 +294,7 @@ function getInfoWindowContent(bathroom) {
 	let template = fs.readFileSync('mobile/assets/templates/info-window.html', 'utf8');
 	return eval('`' + template + '`');
 }
+
+$http(`${Constants.API.URL}status`).get().then(status => {
+	ViewModel.model.view.database.writable = status;
+});

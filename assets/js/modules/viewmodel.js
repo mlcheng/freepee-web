@@ -63,6 +63,9 @@ shell.model = {
 				description: null,
 				submitDisabled: false,
 			}
+		},
+		database: {
+			writable: 'false'
 		}
 	}
 };
