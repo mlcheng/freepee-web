@@ -41,7 +41,6 @@ body[data-writable=false]::before {
 	letter-spacing: 1px;
 	position: fixed;
 	top: 0;
-	right: 0;
 	left: 100px;
 	z-index: 2;
 }
