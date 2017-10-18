@@ -32,11 +32,13 @@ html, body {
 }
 
 body[data-writable=false]::before {
-	content: '(maintenance mode)';
-	color: #e57373;
+	content: 'maintenance mode';
+	text-transform: uppercase;
+	color: #ef9a9a;
 	font-weight: bold;
 	height: 45px;
 	line-height: 45px;
+	letter-spacing: 1px;
 	position: fixed;
 	top: 0;
 	right: 0;
