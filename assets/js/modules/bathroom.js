@@ -272,7 +272,6 @@ function bindBathroomData(bathroom) {
 	ViewModel.model.view.panel.display.add = 'false';
 
 	// Sanitize the description
-	console.log(bathroom);
 	bathroom.description = Util.sanitize(bathroom.description);
 
 	Object.assign(ViewModel.model.map.selectedBathroom, bathroom);

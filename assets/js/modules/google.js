@@ -39,7 +39,8 @@ shell.loadAuth = function() {
 			_auth.signIn();
 		}
 
-		setTimeout(() => _renderLoginButton());
+		// Defer render. Not sure why though.
+		setTimeout(_renderLoginButton);
 	});
 };
 
@@ -101,11 +102,14 @@ function _userChanged(guser) {
 	}
 
 	Apis.auth.resolve();
-
-	console.log(_guser, ViewModel.model.user.guser);
 }
 
 function _renderLoginButton() {
+	// Retry rendering if the button isn't there yet. Seems to be a problem on Firefox and perhaps mobile Safari.
+	if(!document.getElementById(SIGN_IN_BUTTON)) {
+		return setTimeout(_renderLoginButton);
+	}
+
 	gapi.signin2.render(SIGN_IN_BUTTON, {
 		'scope': 'email profile',
 		'width': 110,
