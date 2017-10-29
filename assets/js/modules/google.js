@@ -105,7 +105,7 @@ function _userChanged(guser) {
 }
 
 function _renderLoginButton() {
-	// Retry rendering if the button isn't there yet. Seems to be a problem on Firefox and perhaps mobile Safari.
+	// Retry rendering if the button isn't there yet. Seems to be a problem on Firefox and perhaps mobile Safari. This is likely a terrible hack. I should probably do something about this someday. Like resolve a promise.
 	if(!document.getElementById(SIGN_IN_BUTTON)) {
 		return setTimeout(_renderLoginButton);
 	}

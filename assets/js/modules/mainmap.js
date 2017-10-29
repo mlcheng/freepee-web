@@ -135,8 +135,13 @@ shell.addMyLocationMarker = function(map, location, accuracy) {
  * Get bathrooms based on map center and zoom
  */
 shell.getBathrooms = () => {
-	var coords = _map.getCenter();
-	$http(`${Constants.API.URL}bathroom/get/coords/${coords.lat()},${coords.lng()},${_map.getZoom()}z`)
+	let coords = _map.getCenter();
+	const lat = coords.lat(), lng = coords.lng();
+
+	// The center values are not wrapped by default.
+	coords = new google.maps.LatLng(lat, lng);
+
+	$http(`${Constants.API.URL}bathroom/get/coords/${coords.toUrlValue()},${_map.getZoom()}z`)
 		.get()
 		.then(response => {
 			if(response) {

@@ -166,12 +166,15 @@ shell.create = () => {
 	// First disable the submit button
 	ViewModel.model.view.panel.add.submitDisabled = true;
 
+	// Get wrapped lat/lng values
+	const coords = new google.maps.LatLng(_map.center.lat(), _map.center.lng());
+
 	// Then send the network request
 	$http(`${Constants.API.URL}bathroom/create`)
 		.post({
 			gid: ViewModel.model.user.guser.id,
 			ukey: ViewModel.model.user.guser.token,
-			coords: `${_map.center.lat()},${_map.center.lng()}`,
+			coords: `${coords.lat()},${coords.lng()}`,
 			desc: description.innerText
 		})
 		.then(() => {
