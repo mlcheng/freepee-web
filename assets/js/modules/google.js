@@ -25,8 +25,8 @@ let _auth;
 
 let _guser;
 
-shell.loadAuth = function() {
-	gapi.load('auth2', function() {
+shell.loadAuth = () => {
+	gapi.load('auth2', () => {
 		_auth = gapi.auth2.init({
 			client_id: Constants.Google.OAUTH_ID,
 			scope: 'email profile'
@@ -44,15 +44,15 @@ shell.loadAuth = function() {
 	});
 };
 
-shell.signIn = function() {
+shell.signIn = () => {
 	document.getElementById(SIGN_IN_BUTTON).children[0].click();
 };
 
-shell.loginSuccess = function() {
+shell.loginSuccess = () => {
 
 };
 
-shell.loginFailure = function() {
+shell.loginFailure = () => {
 	iqwerty.snackbar.Snackbar('Login failed', 'Try again',
 		shell.signIn,
 		{
@@ -63,7 +63,7 @@ shell.loginFailure = function() {
 	);
 };
 
-shell.logout = function() {
+shell.logout = () => {
 	_auth.disconnect();
 	ViewModel.model.view.guser.signedIn = false;
 };

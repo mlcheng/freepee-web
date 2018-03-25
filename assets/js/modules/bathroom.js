@@ -38,11 +38,10 @@ const DEFAULT_SMALL_MAP_OPTIONS = {
  */
 let _map;
 
-shell.openPanel = function(id) {
+shell.openPanel = (id) => {
 	showLoading();
 	MainMap.openPanel().then(() => {
 		$http(`${Constants.API.URL}bathroom/get/id/${id}`)
-			.cache()
 			.get()
 			.then(bathroom => {
 				bathroom = JSON.parse(bathroom)[0];
@@ -66,7 +65,7 @@ shell.openPanel = function(id) {
 	});
 };
 
-shell.closePanel = function() {
+shell.closePanel = () => {
 	MainMap.closePanel();
 	_map = null;
 };
@@ -74,7 +73,7 @@ shell.closePanel = function() {
 /**
  * Do the actions necessary to show the panel to add a bathroom
  */
-shell.addBathroom = function(center = ViewModel.model.map.instance.getCenter()) {
+shell.addBathroom = (center = ViewModel.model.map.instance.getCenter()) => {
 	if(!ViewModel.model.user.guser.token) {
 		// User isn't logged in
 		iqwerty.snackbar.Snackbar('You are not logged in', 'Login',
@@ -111,8 +110,7 @@ shell.addBathroom = function(center = ViewModel.model.map.instance.getCenter()) 
 			.get()
 			.then(response => {
 				response = JSON.parse(response);
-				// The response is an array, ordered from most accurate to
-				// least accurate.
+				// The response is an array, ordered from most accurate to least accurate.
 				ViewModel.model.view.panel.add.approx_address = response.results.shift().formatted_address;
 			});
 	});
@@ -195,7 +193,7 @@ shell.create = () => {
 };
 
 shell.delete = () => {
-	if(!window.confirm('Are you sure you want to delete this?')) return;
+	if(!window.confirm('Are you sure you want to delete this bathroom?')) return;
 
 	$http(`${Constants.API.URL}bathroom/delete/id/${ViewModel.model.map.selectedBathroom.id}`)
 		.post({

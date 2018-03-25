@@ -20,6 +20,11 @@ const ViewModel = require('./viewmodel');
 const Util = require('../../../../assets/js/util');
 const fs = require('fs');
 
+// First check database status.
+$http(`${Constants.API.URL}status`).get().then(status => {
+	ViewModel.model.view.database.writable = status;
+});
+
 /**
  * Exposed methods and functions
  * @type {Object}
@@ -57,15 +62,15 @@ let _markerClusterer;
  */
 let _infoWindow = null;
 
-shell.BaseStateController = function() {
+shell.BaseStateController = () => {
 	shell.closePanel();
 };
 
-shell.BathroomStateController = function(id) {
+shell.BathroomStateController = (id)=>  {
 	Bathroom.openPanel(id);
 };
 
-shell.openPanel = function() {
+shell.openPanel = () => {
 	var panel = document.getElementById('panel');
 	var overlay = document.getElementById('overlay');
 	panel.classList.remove(Constants.Iden.HIDDEN);
@@ -82,14 +87,14 @@ shell.openPanel = function() {
 	});
 };
 
-shell.closePanel = function() {
+shell.closePanel = () => {
 	var panel = document.getElementById('panel');
 	var overlay = document.getElementById('overlay');
 	panel.classList.add(Constants.Iden.HIDDEN);
 	overlay.classList.add(Constants.Iden.HIDDEN);
 };
 
-shell.getLocation = function() {
+shell.getLocation = () => {
 	var success = initMap;
 	var error = locationUnavailable;
 	var options = {
@@ -103,10 +108,10 @@ shell.getLocation = function() {
 	}
 
 	navigator.geolocation.getCurrentPosition(success, error, options);
-	//navigator.geolocation.watchPosition(success, error, options);
+	// navigator.geolocation.watchPosition(success, error, options);
 };
 
-shell.addMyLocationMarker = function(map, location, accuracy) {
+shell.addMyLocationMarker = (map, location, accuracy) => {
 	var marker = {
 		url: `${serverRoot}mobile/assets/images/location.png`,
 		size: new google.maps.Size(20, 20),
@@ -164,11 +169,13 @@ shell.reloadMap = () => {
 	shell.getBathrooms();
 };
 
-shell.toggleSearch = function() {
+shell.toggleSearch = () => {
 	const search = document.getElementById(Constants.Iden.SEARCH);
 	search.classList.toggle(Constants.Iden.HIDDEN);
 	if(!search.classList.contains(Constants.Iden.HIDDEN)) {
-		search.querySelector('input').focus();
+		const input = search.querySelector('input');
+		input.value = '';
+		input.focus();
 	}
 };
 
@@ -205,7 +212,7 @@ function initMap(position) {
 
 	let options = Object.assign({}, DEFAULT_MAP_OPTIONS);
 
-	//The following will mutate the default options!!
+	// The following will mutate the default options!!
 	options.zoom = 20;
 	options.center = {
 		lat: mapModel.location.lat,
@@ -214,12 +221,14 @@ function initMap(position) {
 	_map = new google.maps.Map(document.getElementById(MAP_VIEW), options);
 	ViewModel.model.map.instance = _map;
 
-	//Add location marker to map
+	// Add location marker to map
 	shell.addMyLocationMarker(_map, options.center, mapModel.location.accuracy);
 
 	updateMapOnMoved();
 
 	addBathroomOnClick();
+
+	setupSearch();
 }
 
 /**
@@ -300,6 +309,35 @@ function getInfoWindowContent(bathroom) {
 	return eval('`' + template + '`');
 }
 
-$http(`${Constants.API.URL}status`).get().then(status => {
-	ViewModel.model.view.database.writable = status;
-});
+/**
+ * Setup autocomplete search using Google APIs. This is done once on application init.
+ * https://developers.google.com/maps/documentation/javascript/places-autocomplete#places_searchbox
+ */
+function setupSearch() {
+	const input = document.querySelector('#search > input');
+	const searchBox = new google.maps.places.SearchBox(input);
+	searchBox.addListener('places_changed', () => {
+		const places = searchBox.getPlaces();
+
+		if(!places.length) {
+			return;
+		}
+
+		const go = places.shift();
+		const bounds = new google.maps.LatLngBounds();
+		if (go.geometry.viewport) {
+			// Only geocodes have viewport.
+			bounds.union(go.geometry.viewport);
+		} else {
+			bounds.extend(go.geometry.location);
+		}
+
+		_map.fitBounds(bounds);
+	});
+
+	input.addEventListener('keyup', (e) => {
+		if(e.which === 27) {
+			shell.toggleSearch();
+		}
+	});
+}

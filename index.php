@@ -63,7 +63,7 @@ require_once("../functions.php");
 		<script async defer src="https://apis.google.com/js/platform.js?onload=__api_loadAuth"></script>
 
 
-		<title>Free Pee &sect; v2</title>
+		<title>Free Pee</title>
 	</head>
 	<body data-iq-bind-to="data-writable:view.database.writable">
 		<div id="overlay" class="hidden"></div>
