@@ -311,7 +311,7 @@ function getInfoWindowContent(bathroom) {
 
 /**
  * Setup autocomplete search using Google APIs. This is done once on application init.
- * https://developers.google.com/maps/documentation/javascript/places-autocomplete#places_searchbox
+ * https://developers.google.com/maps/documentation/javascript/places-autocomplete
  */
 function setupSearch() {
 	const input = document.querySelector('#search > input');
