@@ -91,7 +91,7 @@ require_once("../functions.php");
 			<button></button>
 		</div>
 
-		<div id="map-view"></div>
+		<div id="map-view" class="loading"></div>
 
 		<button
 			class="fab fab--search"

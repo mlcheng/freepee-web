@@ -31,7 +31,6 @@ $http(`${Constants.API.URL}status`).get().then(status => {
  */
 let shell = module.exports;
 
-const MAP_VIEW = 'map-view';
 const DEFAULT_MAP_OPTIONS = {
 	zoom: 3,
 	center: {
@@ -189,9 +188,10 @@ function locationAvailable() {
 }
 
 function initBasicMap() {
-	_map = new google.maps.Map(document.getElementById(MAP_VIEW), DEFAULT_MAP_OPTIONS);
+	_map = new google.maps.Map(document.getElementById(Constants.Iden.MAP_VIEW), DEFAULT_MAP_OPTIONS);
 	ViewModel.model.map.instance = _map;
-	updateMapOnMoved();
+
+	setupMapHelpers();
 }
 
 // function accuracyNotification(accuracy) {
@@ -218,32 +218,79 @@ function initMap(position) {
 		lat: mapModel.location.lat,
 		lng: mapModel.location.lng
 	};
-	_map = new google.maps.Map(document.getElementById(MAP_VIEW), options);
+
+	_map = new google.maps.Map(document.getElementById(Constants.Iden.MAP_VIEW), options);
 	ViewModel.model.map.instance = _map;
 
 	// Add location marker to map
 	shell.addMyLocationMarker(_map, options.center, mapModel.location.accuracy);
 
-	updateMapOnMoved();
+	setupMapHelpers();
+}
 
-	addBathroomOnClick();
+/**
+ * Called after map is initialized. This sets up basic helpers needed on the map.
+ */
+function setupMapHelpers() {
+	_removeMapLoading();
+	_updateMapOnMoved();
+	_addBathroomOnClick();
+	_setupSearch();
+}
 
-	setupSearch();
+/**
+ * Remove the loading class on the main body when the map is loaded.
+ */
+function _removeMapLoading() {
+	document.getElementById(Constants.Iden.MAP_VIEW).classList.remove(Constants.Iden.LOADING);
 }
 
 /**
  * Update map when it's panned
  */
-function updateMapOnMoved() {
+function _updateMapOnMoved() {
 	_map.addListener('idle', shell.getBathrooms);
 }
 
 /**
  * Open the panel to add a bathroom when it is clicked.
  */
-function addBathroomOnClick() {
+function _addBathroomOnClick() {
 	_map.addListener('rightclick', event => {
 		Bathroom.addBathroom(event.latLng);
+	});
+}
+
+/**
+ * Setup autocomplete search using Google APIs. This is done once on application init.
+ * https://developers.google.com/maps/documentation/javascript/places-autocomplete
+ */
+function _setupSearch() {
+	const input = document.querySelector('#search > input');
+	const searchBox = new google.maps.places.SearchBox(input);
+	searchBox.addListener('places_changed', () => {
+		const places = searchBox.getPlaces();
+
+		if(!places.length) {
+			return;
+		}
+
+		const go = places.shift();
+		const bounds = new google.maps.LatLngBounds();
+		if (go.geometry.viewport) {
+			// Only geocodes have viewport.
+			bounds.union(go.geometry.viewport);
+		} else {
+			bounds.extend(go.geometry.location);
+		}
+
+		_map.fitBounds(bounds);
+	});
+
+	input.addEventListener('keyup', (e) => {
+		if(e.which === 27) {
+			shell.toggleSearch();
+		}
 	});
 }
 
@@ -307,37 +354,4 @@ function getInfoWindowContent(bathroom) {
 	// jshint evil:true, unused:false
 	let template = fs.readFileSync('mobile/assets/templates/info-window.html', 'utf8');
 	return eval('`' + template + '`');
-}
-
-/**
- * Setup autocomplete search using Google APIs. This is done once on application init.
- * https://developers.google.com/maps/documentation/javascript/places-autocomplete
- */
-function setupSearch() {
-	const input = document.querySelector('#search > input');
-	const searchBox = new google.maps.places.SearchBox(input);
-	searchBox.addListener('places_changed', () => {
-		const places = searchBox.getPlaces();
-
-		if(!places.length) {
-			return;
-		}
-
-		const go = places.shift();
-		const bounds = new google.maps.LatLngBounds();
-		if (go.geometry.viewport) {
-			// Only geocodes have viewport.
-			bounds.union(go.geometry.viewport);
-		} else {
-			bounds.extend(go.geometry.location);
-		}
-
-		_map.fitBounds(bounds);
-	});
-
-	input.addEventListener('keyup', (e) => {
-		if(e.which === 27) {
-			shell.toggleSearch();
-		}
-	});
 }
