@@ -17,10 +17,10 @@ require_once("../functions.php");
 		<meta charset="utf-8">
 		<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
 		<meta name="description" content="Find free bathrooms near you!">
+		<meta name="theme-color" content="#00838f" />
 		<meta property="og:title" content="Free Pee">
 		<meta property="og:description" content="Find free bathrooms near you!">
 		<meta property="og:image" content="https://www.iqwerty.net/freepee/assets/images/home_logo.png">
-		<meta name="theme-color" content="#00838f" />
 
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300" type="text/css">
 		<link rel="stylesheet" href="<?= Utils::getAppendedFileHash("mobile/assets/styles/map.min.css") ?>">
