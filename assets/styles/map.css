@@ -11,8 +11,12 @@
 ***********************************************/
 @import url('../../../assets/styles/normalize.css');
 
-/*#00838f, rgb(0, 131, 143)*/
-/*#ffeb3b*/
+/*
+#00838f, rgb(0, 131, 143)
+*/
+/*
+#ffeb3b
+*/
 
 * {
 	box-sizing: border-box;
@@ -140,20 +144,22 @@ body[data-writable=false]::before {
 #panel {
 	background: #f5f5f5;
 	position: fixed;
-	width: 90%;
+	top: 5%;
+	left: calc(50% - 250px);
+	width: 500px;
 	height: 90%;
+	margin: auto;
 	overflow: auto;
 	z-index: 2;
 	border-radius: 2px;
 	box-shadow: 3px 3px 3px rgba(0, 0, 0, .2);
-	transform: translate(5%, 5%);
 	transition: transform 400ms ease-out;
 	-webkit-filter: blur(0);
 	will-change: transform;
 }
 
 #panel.hidden {
-	transform: translate(5%, -200%);
+	transform: translateY(-150%);
 }
 
 #panel .wrapper {
@@ -516,7 +522,9 @@ button {
 	#panel {
 		width: 95%;
 		height: 95%;
-		transform: translate(2.5%, 2.5%);
+		top: 2.5%;
+		left: 2.5%;
+		/*transform: translate(2.5%, 2.5%);*/
 		transition: transform 100ms;
 	}
 
