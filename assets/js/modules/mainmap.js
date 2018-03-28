@@ -179,7 +179,7 @@ shell.toggleSearch = () => {
 };
 
 function locationUnavailable() {
-	iqwerty.toast.Toast('Geolocation is not supported on your device');
+	iqwerty.toast.Toast('Could not retrieve your location');
 	initBasicMap();
 }
 
