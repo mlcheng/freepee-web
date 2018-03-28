@@ -187,19 +187,19 @@ function locationAvailable() {
 	return 'geolocation' in navigator;
 }
 
-function initBasicMap() {
-	_map = new google.maps.Map(document.getElementById(Constants.Iden.MAP_VIEW), DEFAULT_MAP_OPTIONS);
-	ViewModel.model.map.instance = _map;
-
-	setupMapHelpers();
-}
-
 // function accuracyNotification(accuracy) {
 // 	_map.addListener('idle', function() {
 // 		iqwerty.toast.Toast(`Location accuracy is ${accuracy} meters`);
 // 		google.maps.event.clearListeners(_map, 'idle');
 // 	});
 // }
+
+function initBasicMap() {
+	_map = new google.maps.Map(document.getElementById(Constants.Iden.MAP_VIEW), DEFAULT_MAP_OPTIONS);
+	ViewModel.model.map.instance = _map;
+
+	setupMapHelpers();
+}
 
 function initMap(position) {
 	let coords = position.coords;

@@ -95,15 +95,16 @@ require_once("../functions.php");
 			<button></button>
 		</div>
 
-		<div id="map-view" class="loading"></div>
-
 		<button
 			class="fab fab--search"
 			onclick="iqwerty.freepee.MainMap.toggleSearch();">
 		</button>
+
 		<button
 			class="fab fab--add-bathroom"
 			onclick="iqwerty.freepee.Bathroom.addBathroom();">
 		</button>
+
+		<div id="map-view" class="loading"></div>
 	</body>
 </html>
