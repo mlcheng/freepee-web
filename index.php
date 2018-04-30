@@ -22,9 +22,12 @@ require_once("../functions.php");
 		<meta property="og:description" content="Find free bathrooms near you!">
 		<meta property="og:image" content="https://www.iqwerty.net/freepee/assets/images/logo.png">
 
-		<link rel="icon" type="image/x-icon" href="<?= Config::$serverRoot ?>favicon.ico">
+		<!-- favicon stuff -->
+		<link rel="apple-touch-icon" sizes="180x180" href="<?= Config::$serverRoot ?>favicon-apple-touch-icon.png">
 		<link rel="icon" type="image/png" sizes="32x32" href="<?= Config::$serverRoot ?>favicon-32x32.png">
 		<link rel="icon" type="image/png" sizes="16x16" href="<?= Config::$serverRoot ?>favicon-16x16.png">
+		<link rel="icon" type="image/x-icon" href="<?= Config::$serverRoot ?>favicon.ico">
+		<link rel="manifest" href="<?= Config::$serverRoot ?>webmanifest.webmanifest">
 
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300" type="text/css">
 		<link rel="stylesheet" href="<?= Utils::getAppendedFileHash("mobile/assets/styles/map.min.css") ?>">
