@@ -8,6 +8,12 @@
 		</div>
 	</div>
 	<div class="flex-child flex">
-		<a class="button button--info-window" onclick="iqwerty.history.Push('bathroom/${bathroom.id}');">more &raquo;</a>
+		<!-- Maybe something should be done about this link... -->
+		<a
+			class="button button--info-window"
+			href="m/bathroom/${bathroom.id}"
+			onclick="iqwerty.history.Push('bathroom/${bathroom.id}'); return false;">
+				more &raquo;
+		</a>
 	</div>
 </div>
