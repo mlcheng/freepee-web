@@ -94,7 +94,10 @@ require_once("../functions.php");
 		</div>
 
 		<div id="search" class="hidden">
-			<input type="text" placeholder="type a location..." data-iq-bind-to="value:search.place">
+			<input
+				type="text"
+				placeholder="find a place..."
+				data-iq-bind-to="value:search.place">
 			<button></button>
 		</div>
 
