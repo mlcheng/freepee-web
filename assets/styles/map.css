@@ -435,6 +435,7 @@ textarea.full-width {
 
 .flex--row {
 	flex-flow: row nowrap;
+	max-width: 100vw;
 }
 
 .flex--column {
@@ -524,11 +525,9 @@ button {
 		height: 95%;
 		top: 2.5%;
 		left: 2.5%;
-		/*transform: translate(2.5%, 2.5%);*/
-		transition: transform 100ms;
 	}
 
 	#panel.hidden {
-		transform: translate(2.5%, -200%);
+		transform: translateY(-200%);
 	}
 }
