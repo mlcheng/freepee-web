@@ -9,18 +9,15 @@
 
 ***********************************************/
 
+/* global iqwerty, google */
 'use strict';
 
-/* globals module, require, $http, iqwerty, google */
-
-const Constants = require('../../../../assets/js/constants');
-const Util = require('../../../../assets/js/util');
-const MainMap = require('./mainmap');
-const ViewModel = require('./viewmodel');
-const Google = require('./google');
-const Apis = require('./apis');
-
-let shell = module.exports;
+import { Api, Iden, ToiletImage } from './../../../../assets/js/constants';
+import { sanitize } from './../../../../assets/js/util';
+import * as MainMap from './mainmap';
+import * as Google from './google';
+import { Apis } from './apis';
+import { ViewModel } from './viewmodel';
 
 const MAP_VIEW_SMALL = 'map-view-small';
 const DEFAULT_SMALL_MAP_OPTIONS = {
@@ -38,10 +35,14 @@ const DEFAULT_SMALL_MAP_OPTIONS = {
  */
 let _map;
 
-shell.openPanel = (id) => {
+export function BathroomStateController(id) {
+	openPanel(id);
+}
+
+export function openPanel(id) {
 	showLoading();
 	MainMap.openPanel().then(() => {
-		$http(`${Constants.API.URL}bathroom/get/id/${id}`)
+		iqwerty.http.request(`${Api.URL}bathroom/get/id/${id}`)
 			.get()
 			.then(bathroom => {
 				bathroom = JSON.parse(bathroom)[0];
@@ -56,27 +57,27 @@ shell.openPanel = (id) => {
 				});
 
 				Apis.auth.loaded().then(() => {
-					getMyRating(id, ViewModel.model.user.guser.id);
+					getMyRating(id, ViewModel.guser.id);
 
 					// Can the user delete the bathroom
-					ViewModel.model.view.panel.display.delete = bathroom.userid === ViewModel.model.user.guser.id;
+					ViewModel.panel.display.delete = bathroom.userid === ViewModel.guser.id;
 				});
 			});
 	});
-};
+}
 
-shell.closePanel = () => {
+export function closePanel() {
 	MainMap.closePanel();
 	_map = null;
-};
+}
 
 /**
  * Do the actions necessary to show the panel to add a bathroom
  */
-shell.addBathroom = (center = ViewModel.model.map.instance.getCenter()) => {
-	if(!ViewModel.model.user.guser.token) {
+export function addBathroom(center = ViewModel.map.instance.getCenter()) {
+	if(!ViewModel.guser.token) {
 		// User isn't logged in
-		iqwerty.snackbar.Snackbar('You are not logged in', 'Login',
+		iqwerty.snackbar.snackbar('You are not logged in', 'Login',
 			Google.signIn,
 			{
 				settings: {
@@ -90,15 +91,15 @@ shell.addBathroom = (center = ViewModel.model.map.instance.getCenter()) => {
 	MainMap.openPanel();
 	hideLoading();
 
-	ViewModel.model.view.panel.display.detail = 'false';
-	ViewModel.model.view.panel.display.add = 'true';
+	ViewModel.panel.display.detail = 'false';
+	ViewModel.panel.display.add = 'true';
 
 
 	// Let the map be draggable to allow precise adding of bathrooms
-	let options = Object.assign({}, DEFAULT_SMALL_MAP_OPTIONS);
+	const options = Object.assign({}, DEFAULT_SMALL_MAP_OPTIONS);
 	options.draggable = true;
 
-	const { lat, lng } = ViewModel.model.map.location;
+	const { lat, lng } = ViewModel.map.location;
 
 	initMap({ lat, lng }, {
 		lat: center.lat(),
@@ -106,22 +107,22 @@ shell.addBathroom = (center = ViewModel.model.map.instance.getCenter()) => {
 	}, options);
 
 	_map.addListener('idle', () => {
-		$http(`${Constants.API.URL}geocode/get/coords/${_map.center.lat()},${_map.center.lng()}`)
+		iqwerty.http.request(`${Api.URL}geocode/get/coords/${_map.center.lat()},${_map.center.lng()}`)
 			.get()
 			.then(response => {
 				response = JSON.parse(response);
 				// The response is an array, ordered from most accurate to least accurate.
-				ViewModel.model.view.panel.add.approx_address = response.results.shift().formatted_address;
+				ViewModel.panel.add.approx_address = response.results.shift().formatted_address;
 			});
 	});
-};
+}
 
 /**
  * Perform the actions necessary to show the panel to edit a bathroom description.
  * @param {HTMLElement} el The description element
  */
-shell.editBathroom = (el) => {
-	if(!ViewModel.model.view.guser.signedIn) {
+export function editBathroom(el) {
+	if(!ViewModel.guser.signedIn) {
 		return; // User is not signed in.
 	}
 
@@ -139,119 +140,116 @@ shell.editBathroom = (el) => {
 		if(el.innerText === origDesc) return;
 
 		// Send edit request.
-		$http(`${Constants.API.URL}bathroom/edit/id/${ViewModel.model.map.selectedBathroom.id}`)
+		iqwerty.http.request(`${Api.URL}bathroom/edit/id/${ViewModel.map.selectedBathroom.id}`)
 			.post({
-				gid: ViewModel.model.user.guser.id,
-				ukey: ViewModel.model.user.guser.token,
+				gid: ViewModel.guser.id,
+				ukey: ViewModel.guser.token,
 				desc: el.innerText
 			})
 			.then(() => {
-				iqwerty.toast.Toast('Thank you for your contribution!');
+				iqwerty.toast.toast('Thank you for your contribution!');
 			})
-			.catch(() => iqwerty.toast.Toast('You must be logged in to edit'));
-	}, {
-		once: true
-	});
-};
+			.catch(() => iqwerty.toast.toast('You must be logged in to edit'));
+	}, { once: true	});
+}
 
 /**
  * Submit the form for adding a bathroom.
  */
-shell.create = () => {
+export function create() {
 	// Description textarea, used to get and clear the value.
 	const description = document.querySelector('#panel-view [contenteditable]');
 
 	// First disable the submit button
-	ViewModel.model.view.panel.add.submitDisabled = true;
+	ViewModel.panel.add.submitDisabled = true;
 
 	// Get wrapped lat/lng values
 	const coords = new google.maps.LatLng(_map.center.lat(), _map.center.lng());
 
 	// Then send the network request
-	$http(`${Constants.API.URL}bathroom/create`)
+	iqwerty.http.request(`${Api.URL}bathroom/create`)
 		.post({
-			gid: ViewModel.model.user.guser.id,
-			ukey: ViewModel.model.user.guser.token,
+			gid: ViewModel.guser.id,
+			ukey: ViewModel.guser.token,
 			coords: `${coords.lat()},${coords.lng()}`,
 			desc: description.innerText
 		})
 		.then(() => {
-			ViewModel.model.view.panel.add.submitDisabled = false;
+			ViewModel.panel.add.submitDisabled = false;
 			description.innerText = '';
-			iqwerty.toast.Toast('Thank you for your contribution!');
-			shell.closePanel();
+			iqwerty.toast.toast('Thank you for your contribution!');
+			closePanel();
 			MainMap.getBathrooms();
 		})
 		.catch(() => {
-			ViewModel.model.view.panel.add.submitDisabled = false;
+			ViewModel.panel.add.submitDisabled = false;
 
 			// Allow the user to reload the page if they wish.
-			iqwerty.snackbar.Snackbar('Sorry, there was an error. Try reloading the page?', 'Reload', () => {
+			iqwerty.snackbar.snackbar('Sorry, there was an error. Try reloading the page?', 'Reload', () => {
 				window.location.reload();
 			});
 		});
-};
+}
 
-shell.delete = () => {
+export function remove() {
 	if(!window.confirm('Are you sure you want to delete this bathroom?')) return;
 
-	$http(`${Constants.API.URL}bathroom/delete/id/${ViewModel.model.map.selectedBathroom.id}`)
+	iqwerty.http.request(`${Api.URL}bathroom/delete/id/${ViewModel.map.selectedBathroom.id}`)
 		.post({
-			gid: ViewModel.model.user.guser.id,
-			ukey: ViewModel.model.user.guser.token
+			gid: ViewModel.guser.id,
+			ukey: ViewModel.guser.token,
 		})
 		.then(() => {
-			iqwerty.history.Push('');
-			shell.closePanel();
+			iqwerty.history.pushState('');
+			closePanel();
 			MainMap.reloadMap();
 		})
-		.catch(() => iqwerty.toast.Toast('You must have added this bathroom to delete it.'));
-};
+		.catch(() => iqwerty.toast.toast('You must have added this bathroom to delete it.'));
+}
 
-shell.upvote = () => {
+export function upvote() {
 	vote('up');
-};
+}
 
-shell.downvote = () => {
+export function downvote() {
 	vote('down');
-};
+}
 
 function vote(score) {
-	$http(`${Constants.API.URL}bathroom/vote/${score}/${ViewModel.model.map.selectedBathroom.id}`)
+	iqwerty.http.request(`${Api.URL}bathroom/vote/${score}/${ViewModel.map.selectedBathroom.id}`)
 		.post({
-			gid: ViewModel.model.user.guser.id,
-			ukey: ViewModel.model.user.guser.token
+			gid: ViewModel.guser.id,
+			ukey: ViewModel.guser.token,
 		})
 		.then(aggregatedVotes => {
-			iqwerty.toast.Toast('Thank you for your contribution!');
-
+			iqwerty.toast.toast('Thank you for your contribution!');
 
 			// Update the view
-			let votes = JSON.parse(aggregatedVotes);
+			const votes = JSON.parse(aggregatedVotes);
 			delete votes.total_score;
 
 			Object.keys(votes).forEach(vote => {
-				ViewModel.model.map.selectedBathroom[vote] = votes[vote];
+				ViewModel.map.selectedBathroom[vote] = votes[vote];
 			});
 
-			ViewModel.model.map.selectedBathroom.myRating = score === 'up' ? 1 : -1;
+			ViewModel.map.selectedBathroom.myRating = score === 'up' ? 1 : -1;
 		})
-		.catch(() => iqwerty.toast.Toast('You must be logged in to vote'));
+		.catch(() => iqwerty.toast.toast('You must be logged in to vote'));
 }
 
 function showLoading() {
-	document.querySelector('.' + Constants.Iden.LOADING).classList.remove(Constants.Iden.HIDDEN);
+	document.querySelector('.' + Iden.LOADING).classList.remove(Iden.HIDDEN);
 }
 
 function hideLoading() {
-	document.querySelector('.' + Constants.Iden.LOADING).classList.add(Constants.Iden.HIDDEN);
+	document.querySelector('.' + Iden.LOADING).classList.add(Iden.HIDDEN);
 }
 
 function initMap(location, center = location, options = DEFAULT_SMALL_MAP_OPTIONS) {
 	_map = new google.maps.Map(document.getElementById(MAP_VIEW_SMALL), options);
 	_map.setCenter({ lat: center.lat, lng: center.lng });
 
-	const { lat, lng, accuracy } = ViewModel.model.map.location;
+	const { lat, lng, accuracy } = ViewModel.map.location;
 	MainMap.addMyLocationMarker(_map, { lat, lng }, accuracy);
 }
 
@@ -261,7 +259,7 @@ function attachBathroom(bathroom) {
 			lat: bathroom.lat,
 			lng: bathroom.lng
 		},
-		icon: Constants.ToiletImage.BATHROOM_MARKER
+		icon: ToiletImage.BATHROOM_MARKER
 	});
 	marker.setMap(_map);
 }
@@ -269,22 +267,22 @@ function attachBathroom(bathroom) {
 function bindBathroomData(bathroom) {
 	hideLoading();
 
-	ViewModel.model.view.panel.display.detail = 'true';
-	ViewModel.model.view.panel.display.add = 'false';
+	ViewModel.panel.display.detail = 'true';
+	ViewModel.panel.display.add = 'false';
 
 	// Sanitize the description
-	bathroom.description = Util.sanitize(bathroom.description);
+	bathroom.description = sanitize(bathroom.description);
 
-	Object.assign(ViewModel.model.map.selectedBathroom, bathroom);
+	Object.assign(ViewModel.map.selectedBathroom, bathroom);
 }
 
 function getMyRating(id, gid) {
-	$http(`${Constants.API.URL}bathroom/query/id/${id}`)
+	$http(`${Api.URL}bathroom/query/id/${id}`)
 		.get({
 			vote: true,
 			gid
 		})
 		.then(rating => {
-			ViewModel.model.map.selectedBathroom.myRating = JSON.parse(rating).vote;
+			ViewModel.map.selectedBathroom.myRating = JSON.parse(rating).vote;
 		});
 }

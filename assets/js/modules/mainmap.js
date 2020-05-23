@@ -9,27 +9,20 @@
 
 ***********************************************/
 
+/* global iqwerty, google, serverRoot */
 'use strict';
 
-/* globals module, require, serverRoot, google, MarkerClusterer, $http, iqwerty */
-
-const Constants = require('../../../../assets/js/constants');
-const Bathroom = require('./bathroom');
-const ViewModel = require('./viewmodel');
-/* exported Util */
-const Util = require('../../../../assets/js/util');
-const fs = require('fs');
+import infoWindowTemplate from './../../templates/info-window.html';
+import * as Util from './../../../../assets/js/util';
+import { Api, Iden, ToiletImage } from './../../../../assets/js/constants';
+import { ViewModel } from './viewmodel';
 
 // First check database status.
-$http(`${Constants.API.URL}status`).get().then(status => {
-	ViewModel.model.view.database.writable = status;
-});
-
-/**
- * Exposed methods and functions
- * @type {Object}
- */
-let shell = module.exports;
+iqwerty.http.request(`${Api.URL}status`)
+	.get()
+	.then((status) => {
+		ViewModel.database.writable = status;
+	});
 
 const DEFAULT_MAP_OPTIONS = {
 	zoom: 3,
@@ -39,7 +32,6 @@ const DEFAULT_MAP_OPTIONS = {
 	},
 	disableDefaultUI: true
 };
-
 
 /**
  * The Google map for the main view
@@ -61,19 +53,15 @@ let _markerClusterer;
  */
 let _infoWindow = null;
 
-shell.BaseStateController = () => {
-	shell.closePanel();
-};
+export function BaseStateController() {
+	closePanel();
+}
 
-shell.BathroomStateController = (id)=>  {
-	Bathroom.openPanel(id);
-};
-
-shell.openPanel = () => {
-	var panel = document.getElementById('panel');
-	var overlay = document.getElementById('overlay');
-	panel.classList.remove(Constants.Iden.HIDDEN);
-	overlay.classList.remove(Constants.Iden.HIDDEN);
+export function openPanel() {
+	const panel = document.getElementById('panel');
+	const overlay = document.getElementById('overlay');
+	panel.classList.remove(Iden.HIDDEN);
+	overlay.classList.remove(Iden.HIDDEN);
 
 	// Use a promise to do things after the transition end. Hopefully this helps with performance.
 	return new Promise(resolve => {
@@ -84,19 +72,19 @@ shell.openPanel = () => {
 
 		panel.addEventListener('transitionend', _onTransitionEnd);
 	});
-};
+}
 
-shell.closePanel = () => {
-	var panel = document.getElementById('panel');
-	var overlay = document.getElementById('overlay');
-	panel.classList.add(Constants.Iden.HIDDEN);
-	overlay.classList.add(Constants.Iden.HIDDEN);
-};
+export function closePanel() {
+	const panel = document.getElementById('panel');
+	const overlay = document.getElementById('overlay');
+	panel.classList.add(Iden.HIDDEN);
+	overlay.classList.add(Iden.HIDDEN);
+}
 
-shell.getLocation = () => {
-	var success = initMap;
-	var error = locationUnavailable;
-	var options = {
+export function getLocation() {
+	const success = initMap;
+	const error = locationUnavailable;
+	const options = {
 		enableHighAccuracy: false,
 		timeout: 10000
 	};
@@ -108,16 +96,16 @@ shell.getLocation = () => {
 
 	navigator.geolocation.getCurrentPosition(success, error, options);
 	// navigator.geolocation.watchPosition(success, error, options);
-};
+}
 
-shell.addMyLocationMarker = (map, location, accuracy) => {
-	var marker = {
+export function addMyLocationMarker(map, location, accuracy) {
+	const marker = {
 		url: `${serverRoot}mobile/assets/images/location.png`,
 		size: new google.maps.Size(20, 20),
 		origin: new google.maps.Point(0, 0),
 		anchor: new google.maps.Point(10, 10)
 	};
-	var myLocation = new google.maps.Marker({
+	const myLocation = new google.maps.Marker({
 		position: location,
 		title: 'My current location',
 		icon: marker
@@ -133,31 +121,31 @@ shell.addMyLocationMarker = (map, location, accuracy) => {
 		center: location,
 		radius: accuracy
 	});
-};
+}
 
 /**
  * Get bathrooms based on map center and zoom
  */
-shell.getBathrooms = () => {
+export function getBathrooms() {
 	let coords = _map.getCenter();
 	const lat = coords.lat(), lng = coords.lng();
 
 	// The center values are not wrapped by default.
 	coords = new google.maps.LatLng(lat, lng);
 
-	$http(`${Constants.API.URL}bathroom/get/coords/${coords.toUrlValue()},${_map.getZoom()}z`)
+	iqwerty.http.request(`${Api.URL}bathroom/get/coords/${coords.toUrlValue()},${_map.getZoom()}z`)
 		.get()
 		.then(response => {
 			if(response) {
 				attachBathrooms(JSON.parse(response));
 			}
 		});
-};
+}
 
 /**
  * Remove all markers and reload the map.
  */
-shell.reloadMap = () => {
+export function reloadMap() {
 	_markers.forEach(marker => {
 		marker.setMap(null); // Remove marker from map.
 	});
@@ -165,21 +153,21 @@ shell.reloadMap = () => {
 	_markerClusterer.clearMarkers(); // Clear the marker clusterer.
 
 	// Re-request bathrooms.
-	shell.getBathrooms();
-};
+	getBathrooms();
+}
 
-shell.toggleSearch = () => {
-	const search = document.getElementById(Constants.Iden.SEARCH);
-	search.classList.toggle(Constants.Iden.HIDDEN);
-	if(!search.classList.contains(Constants.Iden.HIDDEN)) {
+export function toggleSearch() {
+	const search = document.getElementById(Iden.SEARCH);
+	search.classList.toggle(Iden.HIDDEN);
+	if(!search.classList.contains(Iden.HIDDEN)) {
 		const input = search.querySelector('input');
 		input.value = '';
 		input.focus();
 	}
-};
+}
 
 function locationUnavailable() {
-	iqwerty.toast.Toast('Could not retrieve your location');
+	iqwerty.toast.toast('Could not retrieve your location');
 	initBasicMap();
 }
 
@@ -195,22 +183,22 @@ function locationAvailable() {
 // }
 
 function initBasicMap() {
-	_map = new google.maps.Map(document.getElementById(Constants.Iden.MAP_VIEW), DEFAULT_MAP_OPTIONS);
-	ViewModel.model.map.instance = _map;
+	_map = new google.maps.Map(document.getElementById(Iden.MAP_VIEW), DEFAULT_MAP_OPTIONS);
+	ViewModel.map.instance = _map;
 
 	setupMapHelpers();
 }
 
 function initMap(position) {
-	let coords = position.coords;
-	let mapModel = ViewModel.model.map;
+	const coords = position.coords;
+	const mapModel = ViewModel.map;
 	mapModel.location = {
 		lat: coords.latitude,
 		lng: coords.longitude,
 		accuracy: coords.accuracy
 	};
 
-	let options = Object.assign({}, DEFAULT_MAP_OPTIONS);
+	const options = Object.assign({}, DEFAULT_MAP_OPTIONS);
 
 	// The following will mutate the default options!!
 	options.zoom = 20;
@@ -219,11 +207,11 @@ function initMap(position) {
 		lng: mapModel.location.lng
 	};
 
-	_map = new google.maps.Map(document.getElementById(Constants.Iden.MAP_VIEW), options);
-	ViewModel.model.map.instance = _map;
+	_map = new google.maps.Map(document.getElementById(Iden.MAP_VIEW), options);
+	ViewModel.map.instance = _map;
 
 	// Add location marker to map
-	shell.addMyLocationMarker(_map, options.center, mapModel.location.accuracy);
+	addMyLocationMarker(_map, options.center, mapModel.location.accuracy);
 
 	setupMapHelpers();
 }
@@ -242,22 +230,23 @@ function setupMapHelpers() {
  * Remove the loading class on the main body when the map is loaded.
  */
 function _removeMapLoading() {
-	document.getElementById(Constants.Iden.MAP_VIEW).classList.remove(Constants.Iden.LOADING);
+	document.getElementById(Iden.MAP_VIEW).classList.remove(Iden.LOADING);
 }
 
 /**
  * Update map when it's panned
  */
 function _updateMapOnMoved() {
-	_map.addListener('idle', shell.getBathrooms);
+	_map.addListener('idle', getBathrooms);
 }
 
 /**
  * Open the panel to add a bathroom when it is clicked.
  */
 function _addBathroomOnClick() {
-	_map.addListener('rightclick', event => {
-		Bathroom.addBathroom(event.latLng);
+	_map.addListener('rightclick', () => {
+		// Lol. Circular dependencies.
+		iqwerty.freepee.Bathroom.addBathroom();
 	});
 }
 
@@ -289,7 +278,7 @@ function _setupSearch() {
 
 	input.addEventListener('keyup', (e) => {
 		if(e.which === 27) {
-			shell.toggleSearch();
+			toggleSearch();
 		}
 	});
 }
@@ -307,13 +296,12 @@ function attachBathrooms(bathrooms) {
 	bathrooms
 		.filter(bathroom => !_markers.find(exists => bathroom.id === exists.id))
 		.forEach(bathroom => {
-			// console.info('Attaching new bathroom', bathroom);
 			var marker = new google.maps.Marker({
 				position: {
 					lat: bathroom.lat,
 					lng: bathroom.lng
 				},
-				icon: Constants.ToiletImage.BATHROOM_MARKER,
+				icon: ToiletImage.BATHROOM_MARKER,
 				title: bathroom.approx_address,
 				animation: google.maps.Animation.DROP,
 				id: bathroom.id
@@ -349,9 +337,7 @@ function createInfoWindow() {
 }
 
 function getInfoWindowContent(bathroom) {
-	// `bathroom` and `Util` is used in the template
-
 	// jshint evil:true, unused:false
-	let template = fs.readFileSync('mobile/assets/templates/info-window.html', 'utf8');
-	return eval('`' + template + '`');
+	const template = infoWindowTemplate;
+	return new Function('return `' + template + '`;').call({ bathroom, Util });
 }

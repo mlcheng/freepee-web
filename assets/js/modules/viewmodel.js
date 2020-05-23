@@ -9,17 +9,11 @@
 
 ***********************************************/
 
-
 'use strict';
 
-/* globals module, require, serverRoot, iqwerty */
+import { ToiletImage } from './../../../../assets/js/constants';
 
-const Constants = require('../../../../assets/js/constants');
-const MainMap = require('./mainmap');
-
-let shell = module.exports;
-
-shell.model = {
+export const ViewModel = {
 	map: {
 		/**
 		 * The selected bathroom; used for data binding on the panel
@@ -31,69 +25,35 @@ shell.model = {
 		 * @type {Object}
 		 */
 		search: {
-			place: ''
+			place: '',
 		},
 		location: {},
-		instance: null
+		instance: null,
 	},
-	user: {
-		guser: {
-			token: '',
-			name: '',
-			id: '',
-			gpURL: '',
-			pic: Constants.ToiletImage.BATHROOM_MARKER
+	guser: {
+		token: '',
+		name: '',
+		id: '',
+		gpURL: '',
+		pic: ToiletImage.BATHROOM_MARKER,
+		signedIn: false,
+	},
+	panel: {
+		display: {
+			// Sets whether or not the view is for bathroom details.
+			detail: 'false',
+			// Sets whether or not the view is for adding a bathroom.
+			add: 'false',
+			// Sets whether or not a the view can delete a bathroom
+			delete: 'false',
+		},
+		add: {
+			approx_address: null,
+			description: null,
+			submitDisabled: false,
 		}
 	},
-	view: {
-		guser: {
-			signedIn: false
-		},
-		panel: {
-			display: {
-				// Sets whether or not the view is for bathroom details.
-				detail: 'false',
-				// Sets whether or not the view is for adding a bathroom.
-				add: 'false',
-				// Sets whether or not a the view can delete a bathroom
-				delete: 'false'
-			},
-			add: {
-				approx_address: null,
-				description: null,
-				submitDisabled: false,
-			}
-		},
-		database: {
-			writable: 'false'
-		}
-	}
-};
-
-shell.template = {
-	bindBathroomData() {
-		// Add the selected bathroom to the binding model
-		iqwerty.binding.Model({
-			bathroom: shell.model.map.selectedBathroom,
-			search: shell.model.map.search
-		});
-
-		/**
-		 * Add state controllers
-		 * Must be done after template is loaded...
-		 */
-		iqwerty.history.States({
-			'': MainMap.BaseStateController,
-			'bathroom/:id': MainMap.BathroomStateController
-		}, {
-			'base': `${serverRoot}m/`
-		});
+	database: {
+		writable: 'false',
 	},
-
-	bindToolbarData() {
-		iqwerty.binding.Model({
-			guser: shell.model.user.guser,
-			view: shell.model.view
-		});
-	}
 };

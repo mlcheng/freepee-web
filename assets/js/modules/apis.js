@@ -11,8 +11,6 @@
 
 'use strict';
 
-/* globals module */
-
 /**
  * Notifies that the Map API has loaded.
  */
@@ -29,18 +27,17 @@ const authPromise = new Promise(resolve => {
 	authResolve = resolve;
 });
 
-let shell = module.exports;
-
-shell.map = {
-	loaded() {
-		return mapPromise;
+export const Apis = {
+	map: {
+		loaded() {
+			return mapPromise;
+		},
+		resolve: mapResolve,
 	},
-	resolve: mapResolve
-};
-
-shell.auth = {
-	loaded() {
-		return authPromise;
+	auth: {
+		loaded() {
+			return authPromise;
+		},
+		resolve: authResolve,
 	},
-	resolve: authResolve
 };

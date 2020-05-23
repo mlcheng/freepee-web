@@ -1,16 +1,20 @@
 <div class="loading"></div>
 
 <div class="wrapper">
-	<a onclick="iqwerty.history.Push(''); iqwerty.freepee.MainMap.closePanel();" class="right link close-button">&#x2716;</a>
+	<a
+		onclick="iqwerty.history.pushState(''); iqwerty.freepee.MainMap.closePanel();"
+		class="right link close-button">
+			&#x2716;
+	</a>
 
 	<div
 		id="map-view-small"
 		class="clear card"
-		data-iq-bind-to="data-marker:view.panel.display.add">
+		data-iq-bind-to="data-marker:panel.display.add">
 	</div>
 
 	<div id="panel-view">
-		<div data-iq-bind-to="data-show:view.panel.display.detail">
+		<div data-iq-bind-to="data-show:panel.display.detail">
 			<div class="detail" data-iq-bind>
 				<div class="card">
 					<div class="card--title">Address</div>
@@ -45,17 +49,17 @@
 			</div>
 			<button
 				class="button action negative"
-				onclick="iqwerty.freepee.Bathroom.delete()"
-				data-iq-bind-to="disabled:view.panel.add.submitDisabled;data-show:view.panel.display.delete">
+				onclick="iqwerty.freepee.Bathroom.remove()"
+				data-iq-bind-to="disabled:panel.add.submitDisabled;data-show:panel.display.delete">
 				Delete
 			</button>
 		</div>
-		<div data-iq-bind-to="data-show:view.panel.display.add">
+		<div data-iq-bind-to="data-show:panel.display.add">
 			<div class="detail" data-iq-bind>
 				<div class="card">
 					<div class="card--title">Address</div>
 					<div class="card--description">
-						{view.panel.add.approx_address}
+						{panel.add.approx_address}
 					</div>
 				</div>
 				<div class="card">
@@ -68,7 +72,7 @@
 			<button
 				class="button action"
 				onclick="iqwerty.freepee.Bathroom.create()"
-				data-iq-bind-to="disabled:view.panel.add.submitDisabled">
+				data-iq-bind-to="disabled:panel.add.submitDisabled">
 				Create
 			</button>
 		</div>
