@@ -30,7 +30,7 @@ require_once(__DIR__ . '/../functions.php');
 		<link rel="manifest" href="<?= Config::$serverRoot; ?>webmanifest.webmanifest">
 
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300" type="text/css">
-		<link rel="stylesheet" href="<?= Config::$serverRoot; ?>mobile/assets/styles/map.min.css">
+		<link rel="stylesheet" href="<?= Utils::getAppendedFileHash("mobile/assets/styles/map.min.css"); ?>">
 
 		<!-- My libraries -->
 		<script>
