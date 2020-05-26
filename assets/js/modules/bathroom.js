@@ -126,6 +126,10 @@ export function editBathroom(el) {
 		return; // User is not signed in.
 	}
 
+	if(ViewModel.guser.id !== ViewModel.map.selectedBathroom.userid) {
+		return; // User is not allowed to edit bathroom description.
+	}
+
 	// Stop listening for clicks it it's already in edit mode. This was a bug that caused many event listeners to be added if the div is clicked while it's already in edit mode. Thus, many blur listeners were also added...
 	if(el.contentEditable === 'true') return;
 
